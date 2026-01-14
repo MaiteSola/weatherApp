@@ -1,0 +1,44 @@
+<header
+  class="flex flex-col gap-4 p-6 pb-2 sticky top-0 z-50 frosted-glass md:relative md:bg-transparent md:backdrop-filter-none md:px-0"
+>
+  <div class="flex items-center justify-between w-full gap-4">
+    <!-- Search Bar (Expanded) -->
+    <div class="relative flex-1 max-w-lg">
+      <span
+        class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-white/50"
+      >
+        search
+      </span>
+      <input
+        type="text"
+        [(ngModel)]="searchQuery"
+        (keyup.enter)="onSearch()"
+        (input)="onSearchInput($event)"
+        placeholder="Buscar ciudad..."
+        class="w-full bg-surface-dark/60 border border-border-dark rounded-full py-3 pl-12 pr-4 text-white placeholder-white/50 outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all shadow-inner"
+      />
+    </div>
+
+    <!-- Location Info (Compact) -->
+    <div
+      class="flex flex-col items-end shrink-0"
+      *ngIf="currentWeather$ | async as weather"
+    >
+      <h2
+        class="text-white text-base font-extrabold leading-tight tracking-tight"
+      >
+        {{ weather.location }}, {{ weather.country }}
+      </h2>
+      <div class="flex items-center gap-1">
+        <span class="material-symbols-outlined text-primary text-[12px] fill-1">
+          location_on
+        </span>
+        <span
+          class="text-[9px] uppercase tracking-widest text-primary font-bold"
+        >
+          Actual
+        </span>
+      </div>
+    </div>
+  </div>
+</header>

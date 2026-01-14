@@ -1,0 +1,17 @@
+<div class="px-6 pb-4 md:px-0 md:-mt-2">
+  <div class="flex items-center gap-2 overflow-x-auto no-scrollbar w-full">
+    <span
+      class="text-white/40 text-[10px] uppercase font-bold tracking-wider shrink-0 mr-2"
+    >
+      Recientes:
+    </span>
+
+    <button
+      *ngFor="let search of recentSearches$ | async"
+      (click)="onSearchClick(search.city)"
+      class="bg-surface-dark/60 border border-border-dark px-3 py-1 rounded-full flex items-center gap-1 shrink-0 hover:bg-surface-dark transition-colors"
+    >
+      <span class="text-white text-xs font-semibold">{{ search.city }}</span>
+    </button>
+  </div>
+</div>

@@ -1,0 +1,57 @@
+<nav
+  class="fixed bottom-0 left-0 right-0 max-w-[430px] md:max-w-7xl mx-auto h-20 frosted-glass border-t border-border-dark md:border-x md:border-t md:rounded-t-2xl flex items-center justify-around px-2 z-50"
+>
+  <!-- 3 Days Button -->
+  <button
+    (click)="onNavClick('3-days')"
+    [ngClass]="{
+      'text-primary': isActive('3-days'),
+      'text-white/40': !isActive('3-days')
+    }"
+    class="flex flex-col items-center gap-1 cursor-pointer hover:scale-105 transition-transform"
+  >
+    <span
+      class="material-symbols-outlined"
+      [ngClass]="{ 'fill-1': isActive('3-days') }"
+    >
+      calendar_view_day
+    </span>
+    <span class="text-[10px] font-bold">Pronóstico 3 Días</span>
+  </button>
+
+  <!-- 5 Days Button -->
+  <button
+    (click)="onNavClick('5-days')"
+    [ngClass]="{
+      'text-primary': isActive('5-days'),
+      'text-white/40': !isActive('5-days')
+    }"
+    class="flex flex-col items-center gap-1 cursor-pointer hover:text-primary hover:scale-105 transition-all"
+  >
+    <span
+      class="material-symbols-outlined"
+      [ngClass]="{ 'fill-1': isActive('5-days') }"
+    >
+      calendar_month
+    </span>
+    <span class="text-[10px] font-bold">Pronóstico 5 Días</span>
+  </button>
+
+  <!-- Settings Button -->
+  <button
+    (click)="onNavClick('settings')"
+    [ngClass]="{
+      'text-primary': isActive('settings'),
+      'text-white/40': !isActive('settings')
+    }"
+    class="flex flex-col items-center gap-1 cursor-pointer hover:text-primary hover:scale-105 transition-all"
+  >
+    <span
+      class="material-symbols-outlined"
+      [ngClass]="{ 'fill-1': isActive('settings') }"
+    >
+      settings
+    </span>
+    <span class="text-[10px] font-bold">Ajustes</span>
+  </button>
+</nav>

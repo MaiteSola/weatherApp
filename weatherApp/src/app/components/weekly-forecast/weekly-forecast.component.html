@@ -1,0 +1,60 @@
+<section class="px-6 mb-4 md:px-0 md:flex-1">
+  <div
+    class="bg-surface-dark border border-border-dark rounded-2xl p-5 md:h-full"
+  >
+    <div class="flex items-center gap-2 mb-4 justify-between">
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary text-[20px]">
+          calendar_month
+        </span>
+        <h3 class="text-white/80 text-sm font-bold uppercase tracking-widest">
+          {{ getTitle() }}
+        </h3>
+      </div>
+    </div>
+
+    <!-- Container for forecast lists -->
+    <div class="space-y-6 animate-fade-in">
+      <div
+        *ngFor="let item of forecastData"
+        class="flex items-center justify-between py-1"
+      >
+        <div class="flex flex-col w-20 justify-center">
+          <span class="text-white font-bold text-sm leading-tight">
+            {{ item.day }}
+          </span>
+          <span
+            class="text-white/50 text-[10px] font-bold uppercase tracking-wide leading-tight mt-0.5"
+          >
+            {{ item.text }}
+          </span>
+        </div>
+
+        <span class="material-symbols-outlined text-primary ml-2">
+          {{ item.icon }}
+        </span>
+
+        <div class="flex items-center gap-3 ml-auto">
+          <span class="text-white/40 text-sm font-medium w-6 text-right">
+            {{ item.min }}°
+          </span>
+          <div
+            class="w-24 h-1.5 bg-border-dark rounded-full overflow-hidden relative"
+          >
+            <div
+              class="absolute h-full bg-gradient-to-r rounded-full"
+              [ngClass]="item.color"
+              [ngStyle]="{
+                left: item.start,
+                right: item.end
+              }"
+            ></div>
+          </div>
+          <span class="text-white text-sm font-bold w-6 text-right">
+            {{ item.max }}°
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

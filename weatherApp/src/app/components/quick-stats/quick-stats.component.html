@@ -1,0 +1,81 @@
+<section class="px-6 md:px-0" *ngIf="stats$ | async as stats">
+  <div class="grid grid-cols-3 md:grid-cols-1 gap-3 md:gap-4">
+    <!-- Wind -->
+    <div
+      class="flex flex-col md:flex-row items-center md:justify-between gap-3 rounded-xl border border-border-dark bg-surface-dark p-4 md:p-6"
+    >
+      <div class="flex items-center gap-3">
+        <span class="material-symbols-outlined text-primary text-[24px]">
+          air
+        </span>
+        <p
+          class="text-white/40 text-[10px] hidden md:block uppercase font-bold tracking-wider"
+        >
+          Viento
+        </p>
+      </div>
+      <div class="flex flex-col items-center gap-0.5 md:items-end">
+        <h2 class="text-white text-base font-bold leading-tight md:text-lg">
+          {{ stats.wind }} km/h
+        </h2>
+        <p
+          class="text-white/40 text-[10px] md:hidden uppercase font-bold tracking-wider"
+        >
+          Viento
+        </p>
+      </div>
+    </div>
+
+    <!-- Precipitation -->
+    <div
+      class="flex flex-col md:flex-row items-center md:justify-between gap-3 rounded-xl border border-border-dark bg-surface-dark p-4 md:p-6"
+    >
+      <div class="flex items-center gap-3">
+        <span class="material-symbols-outlined text-primary text-[24px]">
+          rainy
+        </span>
+        <p
+          class="text-white/40 text-[10px] hidden md:block uppercase font-bold tracking-wider"
+        >
+          Precip
+        </p>
+      </div>
+      <div class="flex flex-col items-center gap-0.5 md:items-end">
+        <h2 class="text-white text-base font-bold leading-tight md:text-lg">
+          {{ stats.precipitation }}%
+        </h2>
+        <p
+          class="text-white/40 text-[10px] md:hidden uppercase font-bold tracking-wider"
+        >
+          Precip.
+        </p>
+      </div>
+    </div>
+
+    <!-- UV Index -->
+    <div
+      class="flex flex-col md:flex-row items-center md:justify-between gap-3 rounded-xl border border-border-dark bg-surface-dark p-4 md:p-6"
+    >
+      <div class="flex items-center gap-3">
+        <span class="material-symbols-outlined text-primary text-[24px]">
+          wb_sunny
+        </span>
+        <p
+          class="text-white/40 text-[10px] hidden md:block uppercase font-bold tracking-wider"
+        >
+          Índice UV
+        </p>
+      </div>
+      <div class="flex flex-col items-center gap-0.5 md:items-end">
+        <h2 class="text-white text-base font-bold leading-tight md:text-lg">
+          {{ stats.uvIndex }}
+        </h2>
+        <p
+          class="text-white/40 text-[10px] md:hidden uppercase font-bold tracking-wider"
+        >
+          Índice UV
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
