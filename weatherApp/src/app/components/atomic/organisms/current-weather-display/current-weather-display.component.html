@@ -1,0 +1,66 @@
+<main
+  class="flex flex-col items-center pt-2 pb-6 px-4 md:pt-4 md:pb-8 md:px-6 relative overflow-visible md:flex-row md:justify-center md:gap-16 md:py-16 transition-colors duration-700"
+  *ngIf="currentWeather$ | async as weather"
+>
+  <!-- Dynamic Background Glow (Full Container) -->
+  <div
+    class="absolute inset-0 w-full h-full -z-10 transition-all duration-700 ease-in-out opacity-40 md:opacity-50 blur-[120px]"
+    [ngStyle]="getBackgroundStyle()"
+  ></div>
+
+  <!-- Icon - SIN fondo cuadrado -->
+  <span
+    class="material-symbols-outlined text-[80px] md:text-[100px] lg:text-[180px] text-white mb-3 md:mb-4 lg:mb-0 cursor-pointer select-none transition-all duration-500 z-10 hover:scale-110 active:scale-95 drop-shadow-2xl"
+    [ngStyle]="getIconShadow()"
+    (click)="onIconClick()"
+    style="
+      font-variation-settings:
+        &quot;FILL&quot; 1,
+        &quot;wght&quot; 200;
+    "
+  >
+    {{ weather.icon }}
+  </span>
+
+  <!-- Text Info -->
+  <div class="flex flex-col items-center md:items-start z-10">
+    <!-- Nombre de la Ciudad -->
+    <div class="flex flex-col items-center md:items-start mb-2 md:mb-3">
+      <h2 class="text-white text-xl md:text-2xl font-bold leading-tight">
+        {{ weather.location }}
+      </h2>
+      <p class="text-white/60 text-sm md:text-base font-medium">
+        {{ weather.country }}
+      </p>
+    </div>
+
+    <!-- Temperatura -->
+    <h1
+      class="text-white tracking-tighter text-[72px] sm:text-[92px] md:text-[110px] lg:text-[140px] font-extrabold leading-none drop-shadow-lg"
+    >
+      {{ weather.temperature }}°
+    </h1>
+
+    <!-- Condición -->
+    <p
+      class="text-lg sm:text-xl md:text-2xl lg:text-3xl font-semibold leading-normal mt-1 md:mt-2 tracking-wide transition-colors duration-500"
+      [ngClass]="currentTheme?.textColor || 'text-primary'"
+    >
+      {{ weather.condition }}
+    </p>
+
+    <!-- Max/Min -->
+    <div class="flex gap-3 md:gap-4 mt-1 md:mt-2 lg:mt-4">
+      <span
+        class="text-white/60 text-xs sm:text-sm md:text-base lg:text-lg font-medium"
+      >
+        Máx: {{ weather.maxTemp }}°
+      </span>
+      <span
+        class="text-white/60 text-xs sm:text-sm md:text-base lg:text-lg font-medium"
+      >
+        Mín: {{ weather.minTemp }}°
+      </span>
+    </div>
+  </div>
+</main>

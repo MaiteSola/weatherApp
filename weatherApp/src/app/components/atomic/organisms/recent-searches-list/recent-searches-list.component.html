@@ -1,0 +1,19 @@
+<div class="px-6 pb-4 md:px-0 md:pb-6">
+  <div class="flex items-center gap-2 overflow-x-auto no-scrollbar w-full">
+    <span
+      class="text-white/40 text-[10px] uppercase font-bold tracking-wider shrink-0 mr-2"
+    >
+      Recientes:
+    </span>
+
+    <ion-chip
+      *ngFor="let search of recentSearches$ | async"
+      (click)="onSearchClick(search.city)"
+      class="!bg-surface-dark/60 !border !border-border-dark !m-0 !h-auto shrink-0 hover:!bg-surface-dark transition-colors cursor-pointer"
+    >
+      <ion-label class="!text-white !text-xs !font-semibold !py-1">
+        {{ search.city }}
+      </ion-label>
+    </ion-chip>
+  </div>
+</div>

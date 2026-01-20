@@ -1,0 +1,64 @@
+<ion-content [fullscreen]="true" [scrollEvents]="true">
+  <div
+    class="relative flex h-auto min-h-screen w-full flex-col mx-auto overflow-x-hidden md:overflow-visible pb-20 px-0 md:max-w-7xl"
+  >
+    <!-- Header -->
+    <app-weather-header></app-weather-header>
+
+    <!-- Recent Searches -->
+    <div class="md:px-6">
+      <app-recent-searches-list></app-recent-searches-list>
+    </div>
+
+    <!-- Main Content Area -->
+    <ion-grid class="!p-0">
+      <ion-row class="ion-align-items-start">
+        <!-- LEFT COLUMN - Main Weather Display -->
+        <ion-col size="12" sizeMd="8" sizeLg="9" class="!px-0">
+          <div class="flex flex-col gap-6 md:gap-6 h-full">
+            <!-- Current Weather Display -->
+            <div class="px-0 md:px-6">
+              <app-current-weather-display></app-current-weather-display>
+            </div>
+
+            <!-- Quick Stats (visible on mobile, hidden on desktop) -->
+            <div class="md:hidden">
+              <app-quick-stats-panel></app-quick-stats-panel>
+            </div>
+
+            <!-- Hourly Forecast -->
+            <div class="px-0">
+              <app-hourly-forecast-list></app-hourly-forecast-list>
+            </div>
+          </div>
+        </ion-col>
+
+        <!-- RIGHT COLUMN - Side Information (Desktop only) -->
+        <ion-col size="12" sizeMd="4" sizeLg="3" class="!px-0 md:!px-6 !pt-0">
+          <div class="flex flex-col gap-4 md:gap-3 h-full">
+            <!-- Quick Stats (visible on desktop, hidden on mobile) -->
+            <div class="hidden md:block">
+              <app-quick-stats-panel></app-quick-stats-panel>
+            </div>
+
+            <!-- Weekly Forecast -->
+            <app-weekly-forecast-list
+              [days]="forecastDays"
+            ></app-weekly-forecast-list>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+    <!-- BOTTOM NAVIGATION -->
+    <app-bottom-navigation (navigationChange)="onNavigationChange($event)">
+    </app-bottom-navigation>
+
+    <!-- SETTINGS MODAL OVERLAY -->
+    <app-settings-modal
+      [isOpen]="settingsModalOpen"
+      (close)="onSettingsClose()"
+    >
+    </app-settings-modal>
+  </div>
+</ion-content>

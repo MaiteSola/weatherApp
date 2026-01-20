@@ -1,2 +1,60 @@
 // For information on how to create your own theme, please refer to:
 // https://ionicframework.com/docs/theming/
+
+/** Ionic CSS Variables **/
+:root {
+  /** primary **/
+  --ion-color-primary: #4DB5F4;
+  --ion-color-primary-rgb: 77, 181, 244;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #44a0d7;
+  --ion-color-primary-tint: #5fbdf5;
+
+  /** secondary **/
+  --ion-color-secondary: #3dc2ff;
+  --ion-color-secondary-rgb: 61, 194, 255;
+  --ion-color-secondary-contrast: #ffffff;
+  --ion-color-secondary-contrast-rgb: 255, 255, 255;
+  --ion-color-secondary-shade: #36abe0;
+  --ion-color-secondary-tint: #50c8ff;
+
+  /** Dark Theme **/
+  --ion-background-color: #0f1014;
+  --ion-background-color-rgb: 15, 16, 20;
+
+  --ion-text-color: #ffffff;
+  --ion-text-color-rgb: 255, 255, 255;
+
+  --ion-color-step-50: #1a1b1f;
+  --ion-color-step-100: #26272b;
+  --ion-color-step-150: #313237;
+  --ion-color-step-200: #3d3e42;
+  --ion-color-step-250: #48494e;
+  --ion-color-step-300: #54555a;
+  --ion-color-step-350: #5f6065;
+  --ion-color-step-400: #6b6c71;
+  --ion-color-step-450: #77787d;
+  --ion-color-step-500: #828388;
+  --ion-color-step-550: #8e8f94;
+  --ion-color-step-600: #9a9ba0;
+  --ion-color-step-650: #a5a6ab;
+  --ion-color-step-700: #b1b2b7;
+  --ion-color-step-750: #bdbdc3;
+  --ion-color-step-800: #c8c9ce;
+  --ion-color-step-850: #d4d5da;
+  --ion-color-step-900: #e0e0e6;
+  --ion-color-step-950: #ececf1;
+
+  --ion-item-background: #1e1f29;
+
+  --ion-card-background: #1e1f29;
+  
+  --ion-toolbar-background: transparent;
+  --ion-toolbar-border-color: transparent;
+
+  /** Custom Weather App Colors **/
+  --app-background-dark: #0f1014;
+  --app-surface-dark: #1e1f29;
+  --app-border-dark: rgba(255, 255, 255, 0.08);
+}
