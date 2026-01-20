@@ -1,7 +1,5 @@
-<ion-content [fullscreen]="true" [scrollEvents]="true">
-  <div
-    class="relative flex h-auto min-h-screen w-full flex-col mx-auto overflow-x-hidden md:overflow-visible pb-20 px-0 md:max-w-7xl"
-  >
+<ion-content [fullscreen]="true">
+  <div class="w-full pb-20 md:max-w-7xl md:mx-auto">
     <!-- Header -->
     <app-weather-header></app-weather-header>
 
@@ -11,7 +9,18 @@
     </div>
 
     <!-- Main Content Area -->
-    <ion-grid class="!p-0">
+    <div class="md:hidden">
+      <!-- Móvil: Layout simple sin grid -->
+      <app-current-weather-display></app-current-weather-display>
+      <app-quick-stats-panel></app-quick-stats-panel>
+      <app-hourly-forecast-list></app-hourly-forecast-list>
+      <app-weekly-forecast-list
+        [days]="forecastDays"
+      ></app-weekly-forecast-list>
+    </div>
+
+    <!-- Desktop: Layout con grid -->
+    <ion-grid class="!p-0 hidden md:block">
       <ion-row class="ion-align-items-start">
         <!-- LEFT COLUMN - Main Weather Display -->
         <ion-col size="12" sizeMd="8" sizeLg="9" class="!px-0">
@@ -19,11 +28,6 @@
             <!-- Current Weather Display -->
             <div class="px-0 md:px-6">
               <app-current-weather-display></app-current-weather-display>
-            </div>
-
-            <!-- Quick Stats (visible on mobile, hidden on desktop) -->
-            <div class="md:hidden">
-              <app-quick-stats-panel></app-quick-stats-panel>
             </div>
 
             <!-- Hourly Forecast -->
@@ -36,10 +40,8 @@
         <!-- RIGHT COLUMN - Side Information (Desktop only) -->
         <ion-col size="12" sizeMd="4" sizeLg="3" class="!px-0 md:!px-6 !pt-0">
           <div class="flex flex-col gap-4 md:gap-3 h-full">
-            <!-- Quick Stats (visible on desktop, hidden on mobile) -->
-            <div class="hidden md:block">
-              <app-quick-stats-panel></app-quick-stats-panel>
-            </div>
+            <!-- Quick Stats -->
+            <app-quick-stats-panel></app-quick-stats-panel>
 
             <!-- Weekly Forecast -->
             <app-weekly-forecast-list
