@@ -7,12 +7,18 @@ import {
   WeatherStats,
   CurrentWeather,
   RecentSearch,
+  WeatherApiResponse,
 } from '../models/weather.models';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
 export class WeatherService {
+  // Themes definition
+  private readonly apiKey = 'e71ee7af24af20959176cd386fa3999d';
+  private readonly apiUrl = 'https://api.openweathermap.org/data/2.5/weather';
+
   // Themes definition
   private readonly themes: Record<string, WeatherTheme> = {
     sunny: {
@@ -61,7 +67,7 @@ export class WeatherService {
   });
 
   private currentThemeSubject = new BehaviorSubject<WeatherTheme>(
-    this.themes['sunny']
+    this.themes['sunny'],
   );
   private weatherStatsSubject = new BehaviorSubject<WeatherStats>({
     wind: 12,
@@ -85,7 +91,7 @@ export class WeatherService {
   public recentSearches$: Observable<RecentSearch[]> =
     this.recentSearchesSubject.asObservable();
 
-  constructor() {}
+  constructor(private http: HttpClient) {}
 
   // Get hourly forecast data
   getHourlyForecast(): HourlyForecast[] {
@@ -192,13 +198,13 @@ export class WeatherService {
     const themeKeys = Object.keys(this.themes);
     const currentTheme = this.currentThemeSubject.value;
     const currentIndex = themeKeys.findIndex(
-      (key) => this.themes[key] === currentTheme
+      (key) => this.themes[key] === currentTheme,
     );
     const nextIndex = (currentIndex + 1) % themeKeys.length;
     this.setTheme(themeKeys[nextIndex]);
   }
 
-  // Search for a city (mock implementation)
+  // Search for a city
   searchCity(city: string): void {
     // Add to recent searches
     const searches = this.recentSearchesSubject.value;
@@ -208,13 +214,73 @@ export class WeatherService {
     ].slice(0, 3);
     this.recentSearchesSubject.next(newSearches);
 
-    // Update location
-    const currentWeather = this.currentWeatherSubject.value;
-    this.currentWeatherSubject.next({
-      ...currentWeather,
-      location: city,
-      country: 'XX', // Mock country code
+    // Call API
+    const url = `${this.apiUrl}?q=${city}&appid=${this.apiKey}&units=metric&lang=es`;
+
+    this.http.get<WeatherApiResponse>(url).subscribe({
+      next: (data) => {
+        // Map to CurrentWeather
+        const current: CurrentWeather = {
+          temperature: Math.round(data.main.temp),
+          condition: data.weather[0].description,
+          icon: this.mapIcon(data.weather[0].icon),
+          maxTemp: Math.round(data.main.temp_max),
+          minTemp: Math.round(data.main.temp_min),
+          location: data.name,
+          country: data.sys.country,
+        };
+        this.currentWeatherSubject.next(current);
+
+        // Update Theme based on weather id
+        const themeName = this.getThemeNameFromCondition(data.weather[0].id);
+        this.setTheme(themeName);
+
+        // Update Stats
+        const stats: WeatherStats = {
+          wind: Math.round(data.wind.speed * 3.6), // Convert m/s to km/h
+          precipitation: data.main.humidity, // Using humidity as precipitation/moisture proxy
+          uvIndex: 0, // Not available in current weather endpoint
+        };
+        this.weatherStatsSubject.next(stats);
+      },
+      error: (err) => {
+        console.error('Error fetching weather:', err);
+      },
     });
+  }
+
+  private mapIcon(apiIcon: string): string {
+    const iconMap: Record<string, string> = {
+      '01d': 'light_mode',
+      '01n': 'bedtime',
+      '02d': 'partly_cloudy_day',
+      '02n': 'partly_cloudy_day',
+      '03d': 'cloud',
+      '03n': 'cloud',
+      '04d': 'cloud',
+      '04n': 'cloud',
+      '09d': 'rainy',
+      '09n': 'rainy',
+      '10d': 'rainy',
+      '10n': 'rainy',
+      '11d': 'thunderstorm',
+      '11n': 'thunderstorm',
+      '13d': 'ac_unit',
+      '13n': 'ac_unit',
+      '50d': 'foggy',
+      '50n': 'foggy',
+    };
+    return iconMap[apiIcon] || 'question_mark';
+  }
+
+  private getThemeNameFromCondition(id: number): string {
+    if (id >= 200 && id < 300) return 'stormy';
+    if (id >= 300 && id < 600) return 'rainy';
+    if (id >= 600 && id < 700) return 'rainy'; // Snow
+    if (id >= 700 && id < 800) return 'cloudy'; // Atmosphere
+    if (id === 800) return 'sunny';
+    if (id > 800) return 'cloudy';
+    return 'sunny';
   }
 
   // Get recent searches
