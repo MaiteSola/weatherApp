@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { IonicModule } from '@ionic/angular';
 import { WeatherPageTemplateComponent } from '../components/atomic/templates/weather-page-template/weather-page-template.component';
 import { NavigationOption } from '../components/atomic/organisms/bottom-navigation/bottom-navigation.component';
 import { WeatherService } from '../core/services/weather.service';
@@ -9,7 +10,8 @@ import { WeatherService } from '../core/services/weather.service';
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
   standalone: true,
-  imports: [CommonModule, WeatherPageTemplateComponent],
+  imports: [CommonModule, IonicModule, WeatherPageTemplateComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class HomePage implements OnInit {
   forecastDays: 3 | 5 = 3;

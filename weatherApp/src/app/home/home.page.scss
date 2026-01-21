@@ -1,7 +1,10 @@
-ion-content {
-  --background: #121212;
-  --padding-start: 0;
-  --padding-end: 0;
-  --padding-top: 0;
-  --padding-bottom: 0;
+/* Minimum Layout Styles */
+:host {
+  display: block;
+  height: 100%;
+}
+
+ion-page {
+  height: 100%;
+  /* No overflow hidden here to be safe, but child handles scroll */
 }

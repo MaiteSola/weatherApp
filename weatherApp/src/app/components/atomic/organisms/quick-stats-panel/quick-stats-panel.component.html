@@ -1,5 +1,5 @@
 <section class="px-2 md:px-0 w-full" *ngIf="stats$ | async as stats">
-  <div class="grid grid-cols-3 md:grid-cols-1 gap-1.5 md:gap-3 w-full">
+  <div class="grid grid-cols-3 gap-2 md:gap-3 w-full">
     <!-- Wind -->
     <ion-card class="!m-0 !min-w-0">
       <ion-card-content class="!p-2 md:!p-5">
@@ -64,26 +64,26 @@
             <p
               class="text-white/40 text-[10px] hidden md:block uppercase font-bold tracking-wider"
             >
-              Precip
+              Precipitación
             </p>
           </div>
           <div class="flex flex-col items-center gap-0.5 md:items-end">
             <h2
               class="text-white text-sm md:text-base lg:text-xl font-bold leading-tight"
             >
-              {{ stats.precipitation }}%
+              {{ stats.precipitation }}
             </h2>
             <p
-              class="text-white/60 text-[7px] md:text-[9px] md:hidden uppercase font-medium tracking-wide"
+              class="text-white/60 text-[7px] md:text-[9px] uppercase font-medium tracking-wide"
             >
-              %
+              mm
             </p>
           </div>
         </div>
       </ion-card-content>
     </ion-card>
 
-    <!-- UV Index -->
+    <!-- Humidity -->
     <ion-card class="!m-0 !min-w-0">
       <ion-card-content class="!p-2 md:!p-5">
         <div
@@ -93,30 +93,147 @@
             <span
               class="material-symbols-outlined text-primary text-[20px] md:text-[32px]"
             >
-              wb_sunny
+              water_drop
             </span>
             <p
               class="text-white/40 text-[8px] md:text-[10px] md:hidden uppercase font-bold tracking-wider text-center leading-tight"
             >
-              UV
+              HUMEDAD
             </p>
             <p
               class="text-white/40 text-[10px] hidden md:block uppercase font-bold tracking-wider"
             >
-              Índice UV
+              Humedad
             </p>
           </div>
           <div class="flex flex-col items-center gap-0.5 md:items-end">
             <h2
               class="text-white text-sm md:text-base lg:text-xl font-bold leading-tight"
             >
-              {{ stats.uvIndex }}
+              {{ stats.humidity }}%
+            </h2>
+            <p
+              class="text-white/60 text-[7px] md:text-[9px] uppercase font-medium tracking-wide"
+            ></p>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Visibility -->
+    <ion-card class="!m-0 !min-w-0">
+      <ion-card-content class="!p-2 md:!p-5">
+        <div
+          class="flex flex-col md:flex-row items-center md:justify-between gap-1 md:gap-3"
+        >
+          <div class="flex flex-col md:flex-row items-center gap-1 md:gap-3">
+            <span
+              class="material-symbols-outlined text-primary text-[20px] md:text-[32px]"
+            >
+              visibility
+            </span>
+            <p
+              class="text-white/40 text-[8px] md:text-[10px] md:hidden uppercase font-bold tracking-wider text-center leading-tight"
+            >
+              VISIBIL
+            </p>
+            <p
+              class="text-white/40 text-[10px] hidden md:block uppercase font-bold tracking-wider"
+            >
+              Visibilidad
+            </p>
+          </div>
+          <div class="flex flex-col items-center gap-0.5 md:items-end">
+            <h2
+              class="text-white text-sm md:text-base lg:text-xl font-bold leading-tight"
+            >
+              {{ stats.visibility }}
             </h2>
             <p
               class="text-white/60 text-[7px] md:text-[9px] uppercase font-medium tracking-wide"
             >
-              UV
+              km
             </p>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Pressure -->
+    <ion-card class="!m-0 !min-w-0">
+      <ion-card-content class="!p-2 md:!p-5">
+        <div
+          class="flex flex-col md:flex-row items-center md:justify-between gap-1 md:gap-3"
+        >
+          <div class="flex flex-col md:flex-row items-center gap-1 md:gap-3">
+            <span
+              class="material-symbols-outlined text-primary text-[20px] md:text-[32px]"
+            >
+              compress
+            </span>
+            <p
+              class="text-white/40 text-[8px] md:text-[10px] md:hidden uppercase font-bold tracking-wider text-center leading-tight"
+            >
+              PRESIÓN
+            </p>
+            <p
+              class="text-white/40 text-[10px] hidden md:block uppercase font-bold tracking-wider"
+            >
+              Presión
+            </p>
+          </div>
+          <div class="flex flex-col items-center gap-0.5 md:items-end">
+            <h2
+              class="text-white text-sm md:text-base lg:text-xl font-bold leading-tight"
+            >
+              {{ stats.pressure }}
+            </h2>
+            <p
+              class="text-white/60 text-[7px] md:text-[9px] uppercase font-medium tracking-wide"
+            >
+              hPa
+            </p>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Sun -->
+    <ion-card class="!m-0 !min-w-0">
+      <ion-card-content class="!p-2 md:!p-5">
+        <div
+          class="flex flex-col md:flex-row items-center md:justify-between gap-1 md:gap-3"
+        >
+          <div class="flex flex-col md:flex-row items-center gap-1 md:gap-3">
+            <span
+              class="material-symbols-outlined text-primary text-[20px] md:text-[32px]"
+            >
+              wb_twilight
+            </span>
+            <p
+              class="text-white/40 text-[8px] md:text-[10px] md:hidden uppercase font-bold tracking-wider text-center leading-tight"
+            >
+              SOL
+            </p>
+            <p
+              class="text-white/40 text-[10px] hidden md:block uppercase font-bold tracking-wider"
+            >
+              Salida / Puesta
+            </p>
+          </div>
+          <div class="flex flex-col items-center gap-0.5 md:items-end">
+            <div class="flex flex-col items-center md:items-end">
+              <h2
+                class="text-white text-xs md:text-sm lg:text-base font-bold leading-tight"
+              >
+                {{ stats.sunrise }}
+              </h2>
+              <h2
+                class="text-white text-xs md:text-sm lg:text-base font-bold leading-tight opacity-70"
+              >
+                {{ stats.sunset }}
+              </h2>
+            </div>
           </div>
         </div>
       </ion-card-content>

@@ -26,8 +26,22 @@ export interface DailyForecast {
 
 export interface WeatherStats {
   wind: number; // km/h
-  precipitation: number; // %
+  precipitation: number; // % (pop) or mm
   uvIndex: number;
+  humidity: number; // %
+  pressure: number; // hPa
+  visibility: number; // km
+  sunrise: string;
+  sunset: string;
+}
+
+export interface GeoResponse {
+  name: string;
+  local_names?: Record<string, string>;
+  lat: number;
+  lon: number;
+  country: string;
+  state?: string;
 }
 
 export interface CurrentWeather {

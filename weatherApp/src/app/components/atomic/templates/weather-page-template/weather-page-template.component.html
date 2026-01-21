@@ -1,5 +1,8 @@
-<ion-content [fullscreen]="true">
-  <div class="w-full pb-20 md:max-w-7xl md:mx-auto">
+<!-- Main Scroll Container using Native CSS -->
+<div
+  class="w-full h-full overflow-y-auto overflow-x-hidden bg-[#121212] relative scroll-smooth"
+>
+  <div class="w-full pb-32 md:pb-24 md:max-w-7xl md:mx-auto">
     <!-- Header -->
     <app-weather-header></app-weather-header>
 
@@ -14,17 +17,19 @@
       <app-current-weather-display></app-current-weather-display>
       <app-quick-stats-panel></app-quick-stats-panel>
       <app-hourly-forecast-list></app-hourly-forecast-list>
-      <app-weekly-forecast-list
-        [days]="forecastDays"
-      ></app-weekly-forecast-list>
+      <div id="weekly-forecast">
+        <app-weekly-forecast-list
+          [days]="forecastDays"
+        ></app-weekly-forecast-list>
+      </div>
     </div>
 
     <!-- Desktop: Layout con grid -->
     <ion-grid class="!p-0 hidden md:block">
-      <ion-row class="ion-align-items-start">
-        <!-- LEFT COLUMN - Main Weather Display -->
+      <ion-row class="ion-align-items-start h-full">
+        <!-- LEFT COLUMN - Main Weather, Hourly -->
         <ion-col size="12" sizeMd="8" sizeLg="9" class="!px-0">
-          <div class="flex flex-col gap-6 md:gap-6 h-full">
+          <div class="flex flex-col gap-6 md:gap-6">
             <!-- Current Weather Display -->
             <div class="px-0 md:px-6">
               <app-current-weather-display></app-current-weather-display>
@@ -37,30 +42,39 @@
           </div>
         </ion-col>
 
-        <!-- RIGHT COLUMN - Side Information (Desktop only) -->
+        <!-- RIGHT COLUMN - Stats & Weekly Forecast -->
         <ion-col size="12" sizeMd="4" sizeLg="3" class="!px-0 md:!px-6 !pt-0">
-          <div class="flex flex-col gap-4 md:gap-3 h-full">
+          <div class="flex flex-col gap-4 md:gap-3">
             <!-- Quick Stats -->
             <app-quick-stats-panel></app-quick-stats-panel>
 
             <!-- Weekly Forecast -->
-            <app-weekly-forecast-list
-              [days]="forecastDays"
-            ></app-weekly-forecast-list>
+            <div id="weekly-forecast-desktop">
+              <app-weekly-forecast-list
+                [days]="forecastDays"
+              ></app-weekly-forecast-list>
+            </div>
           </div>
         </ion-col>
       </ion-row>
     </ion-grid>
-
-    <!-- BOTTOM NAVIGATION -->
-    <app-bottom-navigation (navigationChange)="onNavigationChange($event)">
-    </app-bottom-navigation>
-
-    <!-- SETTINGS MODAL OVERLAY -->
-    <app-settings-modal
-      [isOpen]="settingsModalOpen"
-      (close)="onSettingsClose()"
-    >
-    </app-settings-modal>
   </div>
-</ion-content>
+</div>
+
+<!-- BOTTOM NAVIGATION -->
+<div class="fixed bottom-0 left-0 right-0 z-50 md:hidden pb-safe">
+  <app-bottom-navigation
+    (navigationChange)="onNavigationChange($event)"
+  ></app-bottom-navigation>
+</div>
+
+<!-- Desktop Navigation -->
+<div class="hidden md:block fixed bottom-0 left-0 right-0 z-50">
+  <app-bottom-navigation
+    (navigationChange)="onNavigationChange($event)"
+  ></app-bottom-navigation>
+</div>
+
+<!-- SETTINGS MODAL OVERLAY -->
+<app-settings-modal [isOpen]="settingsModalOpen" (close)="onSettingsClose()">
+</app-settings-modal>

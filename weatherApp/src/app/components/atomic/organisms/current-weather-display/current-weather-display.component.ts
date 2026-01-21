@@ -40,10 +40,6 @@ export class CurrentWeatherDisplayComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  onIconClick(): void {
-    this.weatherService.cycleTheme();
-  }
-
   getBackgroundStyle(): any {
     if (!this.currentTheme) return {};
     return {

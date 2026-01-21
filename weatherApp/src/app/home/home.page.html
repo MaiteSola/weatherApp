@@ -1,7 +1,9 @@
-<app-weather-page-template
-  [forecastDays]="forecastDays"
-  [settingsModalOpen]="settingsModalOpen"
-  (navigationChange)="onNavigationChange($event)"
-  (settingsClose)="onSettingsClose()"
->
-</app-weather-page-template>
+<ion-page>
+  <app-weather-page-template
+    [forecastDays]="forecastDays"
+    [settingsModalOpen]="settingsModalOpen"
+    (navigationChange)="onNavigationChange($event)"
+    (settingsClose)="onSettingsClose()"
+  >
+  </app-weather-page-template>
+</ion-page>
