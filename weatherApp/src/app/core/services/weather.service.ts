@@ -8,6 +8,7 @@ import {
   CurrentWeather,
   RecentSearch,
   WeatherApiResponse,
+  ForecastApiResponse,
 } from '../models/weather.models';
 import { HttpClient } from '@angular/common/http';
 
@@ -18,6 +19,12 @@ export class WeatherService {
   // Themes definition
   private readonly apiKey = 'e71ee7af24af20959176cd386fa3999d';
   private readonly apiUrl = 'https://api.openweathermap.org/data/2.5/weather';
+  private readonly forecastUrl =
+    'https://api.openweathermap.org/data/2.5/forecast';
+
+  // Store current coordinates for forecast requests
+  private currentLat: number = 40.4168; // Default: Madrid
+  private currentLon: number = -3.7038;
 
   // Themes definition
   private readonly themes: Record<string, WeatherTheme> = {
@@ -81,6 +88,9 @@ export class WeatherService {
     { city: 'New York' },
   ]);
 
+  private hourlyForecastSubject = new BehaviorSubject<HourlyForecast[]>([]);
+  private dailyForecastSubject = new BehaviorSubject<DailyForecast[]>([]);
+
   // Observables
   public currentWeather$: Observable<CurrentWeather> =
     this.currentWeatherSubject.asObservable();
@@ -90,11 +100,123 @@ export class WeatherService {
     this.weatherStatsSubject.asObservable();
   public recentSearches$: Observable<RecentSearch[]> =
     this.recentSearchesSubject.asObservable();
+  public hourlyForecast$: Observable<HourlyForecast[]> =
+    this.hourlyForecastSubject.asObservable();
+  public dailyForecast$: Observable<DailyForecast[]> =
+    this.dailyForecastSubject.asObservable();
 
   constructor(private http: HttpClient) {}
 
-  // Get hourly forecast data
-  getHourlyForecast(): HourlyForecast[] {
+  // Fetch and update hourly forecast from API with interpolation for every hour
+  private fetchHourlyForecast(): void {
+    const url = `${this.forecastUrl}?lat=${this.currentLat}&lon=${this.currentLon}&appid=${this.apiKey}&units=metric&lang=es`;
+
+    this.http.get<ForecastApiResponse>(url).subscribe({
+      next: (data) => {
+        const timezoneOffsetSeconds = data.city.timezone; // Timezone offset in seconds
+        const hourlyData: HourlyForecast[] = [];
+
+        // Get current time in the city's timezone
+        const nowUtc = new Date();
+        const nowInCity = new Date(
+          nowUtc.getTime() + timezoneOffsetSeconds * 1000,
+        );
+
+        // Get midnight of current day in city's timezone
+        const midnightInCity = new Date(nowInCity);
+        midnightInCity.setHours(23, 59, 59, 999);
+
+        // Get available forecast data
+        const forecasts = data.list;
+
+        if (forecasts.length < 2) {
+          // Not enough data to interpolate
+          this.hourlyForecastSubject.next(this.getFallbackHourlyForecast());
+          return;
+        }
+
+        // Generate hourly forecasts from current hour to midnight
+        const startHour = nowInCity.getHours();
+        const currentDate = new Date(nowInCity);
+        currentDate.setMinutes(0, 0, 0);
+
+        for (let hour = startHour; hour <= 23; hour++) {
+          const targetTime = new Date(nowInCity);
+          targetTime.setHours(hour, 0, 0, 0);
+          const targetTimestamp = targetTime.getTime() / 1000;
+
+          // Find the two closest forecast points
+          let before: any = null;
+          let after: any = null;
+
+          for (let i = 0; i < forecasts.length - 1; i++) {
+            if (
+              forecasts[i].dt <= targetTimestamp &&
+              forecasts[i + 1].dt >= targetTimestamp
+            ) {
+              before = forecasts[i];
+              after = forecasts[i + 1];
+              break;
+            }
+          }
+
+          // If we can't interpolate, use the closest point
+          if (!before || !after) {
+            const closest = forecasts.reduce((prev, curr) =>
+              Math.abs(curr.dt - targetTimestamp) <
+              Math.abs(prev.dt - targetTimestamp)
+                ? curr
+                : prev,
+            );
+
+            hourlyData.push({
+              time:
+                hour === startHour
+                  ? 'Ahora'
+                  : `${hour.toString().padStart(2, '0')}:00`,
+              icon: this.mapIcon(closest.weather[0].icon),
+              temperature: Math.round(closest.main.temp),
+              isActive: hour === startHour,
+            });
+            continue;
+          }
+
+          // Interpolate temperature between the two points
+          const timeDiff = after.dt - before.dt;
+          const timeOffset = targetTimestamp - before.dt;
+          const ratio = timeOffset / timeDiff;
+
+          const interpolatedTemp =
+            before.main.temp + (after.main.temp - before.main.temp) * ratio;
+
+          // Use the icon from the closest point
+          const useAfterIcon = ratio > 0.5;
+          const weatherIcon = useAfterIcon
+            ? after.weather[0].icon
+            : before.weather[0].icon;
+
+          hourlyData.push({
+            time:
+              hour === startHour
+                ? 'Ahora'
+                : `${hour.toString().padStart(2, '0')}:00`,
+            icon: this.mapIcon(weatherIcon),
+            temperature: Math.round(interpolatedTemp),
+            isActive: hour === startHour,
+          });
+        }
+
+        this.hourlyForecastSubject.next(hourlyData);
+      },
+      error: (err) => {
+        console.error('Error fetching hourly forecast:', err);
+        this.hourlyForecastSubject.next(this.getFallbackHourlyForecast());
+      },
+    });
+  }
+
+  // Fallback data in case API fails
+  private getFallbackHourlyForecast(): HourlyForecast[] {
     return [
       { time: 'Ahora', icon: 'light_mode', temperature: 24, isActive: true },
       { time: '14:00', icon: 'light_mode', temperature: 25 },
@@ -102,16 +224,81 @@ export class WeatherService {
       { time: '16:00', icon: 'cloud', temperature: 25 },
       { time: '17:00', icon: 'cloud', temperature: 23 },
       { time: '18:00', icon: 'rainy', temperature: 21 },
-      { time: '19:00', icon: 'thunderstorm', temperature: 20 },
-      { time: '20:00', icon: 'thunderstorm', temperature: 19 },
-      { time: '21:00', icon: 'cloudy_snowing', temperature: 18 },
-      { time: '22:00', icon: 'cloudy_snowing', temperature: 17 },
-      { time: '23:00', icon: 'bedtime', temperature: 16 },
     ];
   }
 
-  // Get daily forecast data
-  getDailyForecast(days: 3 | 5): DailyForecast[] {
+  // Fetch and update daily forecast from API
+  private fetchDailyForecast(days: 3 | 5 = 5): void {
+    const url = `${this.forecastUrl}?lat=${this.currentLat}&lon=${this.currentLon}&appid=${this.apiKey}&units=metric&lang=es`;
+
+    this.http.get<ForecastApiResponse>(url).subscribe({
+      next: (data) => {
+        // Group forecasts by day
+        const dailyMap = new Map<string, any[]>();
+
+        data.list.forEach((forecast) => {
+          const date = new Date(forecast.dt * 1000);
+          const dayKey = date.toISOString().split('T')[0];
+
+          if (!dailyMap.has(dayKey)) {
+            dailyMap.set(dayKey, []);
+          }
+          dailyMap.get(dayKey)!.push(forecast);
+        });
+
+        const dailyForecasts: DailyForecast[] = [];
+        const daysArray = Array.from(dailyMap.entries()).slice(0, days);
+        const dayNames = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+
+        daysArray.forEach(([dateKey, forecasts], index) => {
+          const date = new Date(dateKey);
+          const temps = forecasts.map((f) => f.main.temp);
+          const maxTemp = Math.round(Math.max(...temps));
+          const minTemp = Math.round(Math.min(...temps));
+
+          // Get the most common weather condition for the day
+          const weatherCounts = new Map<string, number>();
+          forecasts.forEach((f) => {
+            const icon = f.weather[0].icon;
+            weatherCounts.set(icon, (weatherCounts.get(icon) || 0) + 1);
+          });
+          const mostCommonIcon = Array.from(weatherCounts.entries()).sort(
+            (a, b) => b[1] - a[1],
+          )[0][0];
+
+          const weatherCondition =
+            forecasts.find((f) => f.weather[0].icon === mostCommonIcon)
+              ?.weather[0].description || 'Despejado';
+
+          // Calculate precipitation probability
+          const avgPop = Math.round(
+            (forecasts.reduce((sum, f) => sum + f.pop, 0) / forecasts.length) *
+              100,
+          );
+
+          dailyForecasts.push({
+            day: index === 0 ? 'Hoy' : dayNames[date.getDay()],
+            text: this.truncateText(weatherCondition, 8),
+            icon: this.mapIcon(mostCommonIcon),
+            max: maxTemp,
+            min: minTemp,
+            start: `${avgPop}%`,
+            end: `${Math.max(0, avgPop - 20)}%`,
+            color: 'from-cyan-400 to-yellow-400',
+          });
+        });
+
+        this.dailyForecastSubject.next(dailyForecasts);
+      },
+      error: (err) => {
+        console.error('Error fetching daily forecast:', err);
+        this.dailyForecastSubject.next(this.getFallbackDailyForecast(days));
+      },
+    });
+  }
+
+  // Fallback data in case API fails
+  private getFallbackDailyForecast(days: 3 | 5): DailyForecast[] {
     const allForecasts: DailyForecast[] = [
       {
         day: 'Hoy',
@@ -164,8 +351,12 @@ export class WeatherService {
         color: 'from-cyan-400 to-yellow-400',
       },
     ];
-
     return allForecasts.slice(0, days);
+  }
+
+  private truncateText(text: string, maxLength: number): string {
+    if (text.length <= maxLength) return text;
+    return text.substring(0, maxLength);
   }
 
   // Get all available themes
@@ -219,6 +410,10 @@ export class WeatherService {
 
     this.http.get<WeatherApiResponse>(url).subscribe({
       next: (data) => {
+        // Store coordinates for forecast requests
+        this.currentLat = data.coord.lat;
+        this.currentLon = data.coord.lon;
+
         // Map to CurrentWeather
         const current: CurrentWeather = {
           temperature: Math.round(data.main.temp),
@@ -242,6 +437,10 @@ export class WeatherService {
           uvIndex: 0, // Not available in current weather endpoint
         };
         this.weatherStatsSubject.next(stats);
+
+        // Fetch forecasts with new coordinates
+        this.fetchHourlyForecast();
+        this.fetchDailyForecast(5);
       },
       error: (err) => {
         console.error('Error fetching weather:', err);

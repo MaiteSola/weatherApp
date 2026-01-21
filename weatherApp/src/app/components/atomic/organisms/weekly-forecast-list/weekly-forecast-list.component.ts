@@ -29,7 +29,16 @@ export class WeeklyForecastListComponent implements OnChanges {
   }
 
   private updateForecast(): void {
-    this.forecastData = this.weatherService.getDailyForecast(this.days);
+    // Subscribe to daily forecast updates and filter by requested days
+    this.weatherService.dailyForecast$.subscribe({
+      next: (data) => {
+        // Filter to show only the requested number of days
+        this.forecastData = data.slice(0, this.days);
+      },
+      error: (err) => {
+        console.error('Error loading daily forecast:', err);
+      },
+    });
   }
 
   getTitle(): string {

@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { WeatherPageTemplateComponent } from '../components/atomic/templates/weather-page-template/weather-page-template.component';
 import { NavigationOption } from '../components/atomic/organisms/bottom-navigation/bottom-navigation.component';
+import { WeatherService } from '../core/services/weather.service';
 
 @Component({
   selector: 'app-home',
@@ -10,11 +11,16 @@ import { NavigationOption } from '../components/atomic/organisms/bottom-navigati
   standalone: true,
   imports: [CommonModule, WeatherPageTemplateComponent],
 })
-export class HomePage {
+export class HomePage implements OnInit {
   forecastDays: 3 | 5 = 3;
   settingsModalOpen = false;
 
-  constructor() {}
+  constructor(private weatherService: WeatherService) {}
+
+  ngOnInit(): void {
+    // Load initial weather data for Madrid
+    this.weatherService.searchCity('Madrid');
+  }
 
   onNavigationChange(option: NavigationOption): void {
     if (option === 'settings') {

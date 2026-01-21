@@ -18,7 +18,15 @@ export class HourlyForecastListComponent implements OnInit {
   constructor(private weatherService: WeatherService) {}
 
   ngOnInit(): void {
-    this.hourlyData = this.weatherService.getHourlyForecast();
+    // Subscribe to hourly forecast updates
+    this.weatherService.hourlyForecast$.subscribe({
+      next: (data) => {
+        this.hourlyData = data;
+      },
+      error: (err) => {
+        console.error('Error loading hourly forecast:', err);
+      },
+    });
   }
 
   scrollLeft(): void {
