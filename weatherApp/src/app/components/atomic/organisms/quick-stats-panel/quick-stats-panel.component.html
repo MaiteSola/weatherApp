@@ -1,41 +1,27 @@
 <section class="px-2 md:px-0 w-full" *ngIf="stats$ | async as stats">
-  <div class="grid grid-cols-3 gap-2 md:gap-3 w-full">
+  <div class="grid grid-cols-3 md:grid-cols-6 gap-2 md:gap-4 w-full">
     <!-- Wind -->
     <ion-card class="!m-0 !min-w-0">
-      <ion-card-content class="!p-2 md:!p-5">
-        <div
-          class="flex flex-col md:flex-row items-center md:justify-between gap-1 md:gap-3"
-        >
-          <div class="flex flex-col md:flex-row items-center gap-1 md:gap-3">
+      <ion-card-content class="!p-2 md:!p-4">
+        <div class="flex flex-col items-center justify-center gap-2">
+          <div class="flex flex-col items-center gap-1">
             <span
-              class="material-symbols-outlined text-primary text-[20px] md:text-[32px]"
+              class="material-symbols-outlined text-primary text-[20px] md:text-[24px]"
             >
               air
             </span>
             <p
-              class="text-white/40 text-[8px] md:text-[10px] md:hidden uppercase font-bold tracking-wider text-center leading-tight"
+              class="text-white/40 text-[8px] md:text-[10px] uppercase font-bold tracking-wider text-center leading-tight"
             >
               VIENTO
             </p>
-            <p
-              class="text-white/40 text-[10px] hidden md:block uppercase font-bold tracking-wider"
-            >
-              Viento
-            </p>
           </div>
-          <div class="flex flex-col items-center gap-0.5 md:items-end">
-            <h2
-              class="text-white text-sm md:text-base lg:text-xl font-bold leading-tight"
-            >
+          <div class="flex flex-col items-center gap-0.5">
+            <h2 class="text-white text-sm md:text-base font-bold leading-tight">
               {{ stats.wind }}
             </h2>
             <p
-              class="text-white/60 text-[7px] md:text-[9px] md:hidden uppercase font-medium tracking-wide"
-            >
-              km/h
-            </p>
-            <p
-              class="text-white/60 text-[9px] hidden md:block uppercase font-medium tracking-wide"
+              class="text-white/60 text-[7px] md:text-[8px] uppercase font-medium tracking-wide"
             >
               km/h
             </p>
@@ -46,35 +32,26 @@
 
     <!-- Precipitation -->
     <ion-card class="!m-0 !min-w-0">
-      <ion-card-content class="!p-2 md:!p-5">
-        <div
-          class="flex flex-col md:flex-row items-center md:justify-between gap-1 md:gap-3"
-        >
-          <div class="flex flex-col md:flex-row items-center gap-1 md:gap-3">
+      <ion-card-content class="!p-2 md:!p-4">
+        <div class="flex flex-col items-center justify-center gap-2">
+          <div class="flex flex-col items-center gap-1">
             <span
-              class="material-symbols-outlined text-primary text-[20px] md:text-[32px]"
+              class="material-symbols-outlined text-primary text-[20px] md:text-[24px]"
             >
               rainy
             </span>
             <p
-              class="text-white/40 text-[8px] md:text-[10px] md:hidden uppercase font-bold tracking-wider text-center leading-tight"
+              class="text-white/40 text-[8px] md:text-[10px] uppercase font-bold tracking-wider text-center leading-tight"
             >
               PRECIP
             </p>
-            <p
-              class="text-white/40 text-[10px] hidden md:block uppercase font-bold tracking-wider"
-            >
-              Precipitación
-            </p>
           </div>
-          <div class="flex flex-col items-center gap-0.5 md:items-end">
-            <h2
-              class="text-white text-sm md:text-base lg:text-xl font-bold leading-tight"
-            >
+          <div class="flex flex-col items-center gap-0.5">
+            <h2 class="text-white text-sm md:text-base font-bold leading-tight">
               {{ stats.precipitation }}
             </h2>
             <p
-              class="text-white/60 text-[7px] md:text-[9px] uppercase font-medium tracking-wide"
+              class="text-white/60 text-[7px] md:text-[8px] uppercase font-medium tracking-wide"
             >
               mm
             </p>
@@ -85,36 +62,24 @@
 
     <!-- Humidity -->
     <ion-card class="!m-0 !min-w-0">
-      <ion-card-content class="!p-2 md:!p-5">
-        <div
-          class="flex flex-col md:flex-row items-center md:justify-between gap-1 md:gap-3"
-        >
-          <div class="flex flex-col md:flex-row items-center gap-1 md:gap-3">
+      <ion-card-content class="!p-2 md:!p-4">
+        <div class="flex flex-col items-center justify-center gap-2">
+          <div class="flex flex-col items-center gap-1">
             <span
-              class="material-symbols-outlined text-primary text-[20px] md:text-[32px]"
+              class="material-symbols-outlined text-primary text-[20px] md:text-[24px]"
             >
               water_drop
             </span>
             <p
-              class="text-white/40 text-[8px] md:text-[10px] md:hidden uppercase font-bold tracking-wider text-center leading-tight"
+              class="text-white/40 text-[8px] md:text-[10px] uppercase font-bold tracking-wider text-center leading-tight"
             >
               HUMEDAD
             </p>
-            <p
-              class="text-white/40 text-[10px] hidden md:block uppercase font-bold tracking-wider"
-            >
-              Humedad
-            </p>
           </div>
-          <div class="flex flex-col items-center gap-0.5 md:items-end">
-            <h2
-              class="text-white text-sm md:text-base lg:text-xl font-bold leading-tight"
-            >
+          <div class="flex flex-col items-center gap-0.5">
+            <h2 class="text-white text-sm md:text-base font-bold leading-tight">
               {{ stats.humidity }}%
             </h2>
-            <p
-              class="text-white/60 text-[7px] md:text-[9px] uppercase font-medium tracking-wide"
-            ></p>
           </div>
         </div>
       </ion-card-content>
@@ -122,35 +87,26 @@
 
     <!-- Visibility -->
     <ion-card class="!m-0 !min-w-0">
-      <ion-card-content class="!p-2 md:!p-5">
-        <div
-          class="flex flex-col md:flex-row items-center md:justify-between gap-1 md:gap-3"
-        >
-          <div class="flex flex-col md:flex-row items-center gap-1 md:gap-3">
+      <ion-card-content class="!p-2 md:!p-4">
+        <div class="flex flex-col items-center justify-center gap-2">
+          <div class="flex flex-col items-center gap-1">
             <span
-              class="material-symbols-outlined text-primary text-[20px] md:text-[32px]"
+              class="material-symbols-outlined text-primary text-[20px] md:text-[24px]"
             >
               visibility
             </span>
             <p
-              class="text-white/40 text-[8px] md:text-[10px] md:hidden uppercase font-bold tracking-wider text-center leading-tight"
+              class="text-white/40 text-[8px] md:text-[10px] uppercase font-bold tracking-wider text-center leading-tight"
             >
               VISIBIL
             </p>
-            <p
-              class="text-white/40 text-[10px] hidden md:block uppercase font-bold tracking-wider"
-            >
-              Visibilidad
-            </p>
           </div>
-          <div class="flex flex-col items-center gap-0.5 md:items-end">
-            <h2
-              class="text-white text-sm md:text-base lg:text-xl font-bold leading-tight"
-            >
+          <div class="flex flex-col items-center gap-0.5">
+            <h2 class="text-white text-sm md:text-base font-bold leading-tight">
               {{ stats.visibility }}
             </h2>
             <p
-              class="text-white/60 text-[7px] md:text-[9px] uppercase font-medium tracking-wide"
+              class="text-white/60 text-[7px] md:text-[8px] uppercase font-medium tracking-wide"
             >
               km
             </p>
@@ -161,35 +117,26 @@
 
     <!-- Pressure -->
     <ion-card class="!m-0 !min-w-0">
-      <ion-card-content class="!p-2 md:!p-5">
-        <div
-          class="flex flex-col md:flex-row items-center md:justify-between gap-1 md:gap-3"
-        >
-          <div class="flex flex-col md:flex-row items-center gap-1 md:gap-3">
+      <ion-card-content class="!p-2 md:!p-4">
+        <div class="flex flex-col items-center justify-center gap-2">
+          <div class="flex flex-col items-center gap-1">
             <span
-              class="material-symbols-outlined text-primary text-[20px] md:text-[32px]"
+              class="material-symbols-outlined text-primary text-[20px] md:text-[24px]"
             >
               compress
             </span>
             <p
-              class="text-white/40 text-[8px] md:text-[10px] md:hidden uppercase font-bold tracking-wider text-center leading-tight"
+              class="text-white/40 text-[8px] md:text-[10px] uppercase font-bold tracking-wider text-center leading-tight"
             >
               PRESIÓN
             </p>
-            <p
-              class="text-white/40 text-[10px] hidden md:block uppercase font-bold tracking-wider"
-            >
-              Presión
-            </p>
           </div>
-          <div class="flex flex-col items-center gap-0.5 md:items-end">
-            <h2
-              class="text-white text-sm md:text-base lg:text-xl font-bold leading-tight"
-            >
+          <div class="flex flex-col items-center gap-0.5">
+            <h2 class="text-white text-sm md:text-base font-bold leading-tight">
               {{ stats.pressure }}
             </h2>
             <p
-              class="text-white/60 text-[7px] md:text-[9px] uppercase font-medium tracking-wide"
+              class="text-white/60 text-[7px] md:text-[8px] uppercase font-medium tracking-wide"
             >
               hPa
             </p>
@@ -200,40 +147,29 @@
 
     <!-- Sun -->
     <ion-card class="!m-0 !min-w-0">
-      <ion-card-content class="!p-2 md:!p-5">
-        <div
-          class="flex flex-col md:flex-row items-center md:justify-between gap-1 md:gap-3"
-        >
-          <div class="flex flex-col md:flex-row items-center gap-1 md:gap-3">
+      <ion-card-content class="!p-2 md:!p-4">
+        <div class="flex flex-col items-center justify-center gap-2">
+          <div class="flex flex-col items-center gap-1">
             <span
-              class="material-symbols-outlined text-primary text-[20px] md:text-[32px]"
+              class="material-symbols-outlined text-primary text-[20px] md:text-[24px]"
             >
               wb_twilight
             </span>
             <p
-              class="text-white/40 text-[8px] md:text-[10px] md:hidden uppercase font-bold tracking-wider text-center leading-tight"
+              class="text-white/40 text-[8px] md:text-[10px] uppercase font-bold tracking-wider text-center leading-tight"
             >
               SOL
             </p>
-            <p
-              class="text-white/40 text-[10px] hidden md:block uppercase font-bold tracking-wider"
-            >
-              Salida / Puesta
-            </p>
           </div>
-          <div class="flex flex-col items-center gap-0.5 md:items-end">
-            <div class="flex flex-col items-center md:items-end">
-              <h2
-                class="text-white text-xs md:text-sm lg:text-base font-bold leading-tight"
-              >
-                {{ stats.sunrise }}
-              </h2>
-              <h2
-                class="text-white text-xs md:text-sm lg:text-base font-bold leading-tight opacity-70"
-              >
-                {{ stats.sunset }}
-              </h2>
-            </div>
+          <div class="flex flex-col items-center gap-0.5">
+            <h2 class="text-white text-xs md:text-sm font-bold leading-tight">
+              {{ stats.sunrise }}
+            </h2>
+            <h2
+              class="text-white text-xs md:text-sm font-bold leading-tight opacity-70"
+            >
+              {{ stats.sunset }}
+            </h2>
           </div>
         </div>
       </ion-card-content>

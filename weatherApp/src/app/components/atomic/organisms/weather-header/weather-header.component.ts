@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
@@ -13,7 +13,7 @@ import { CurrentWeather } from '../../../../core/models/weather.models';
   standalone: true,
   imports: [CommonModule, FormsModule, IonicModule],
 })
-export class WeatherHeaderComponent {
+export class WeatherHeaderComponent implements OnInit {
   @Output() search = new EventEmitter<string>();
 
   searchQuery = '';
@@ -21,6 +21,29 @@ export class WeatherHeaderComponent {
 
   constructor(private weatherService: WeatherService) {
     this.currentWeather$ = this.weatherService.currentWeather$;
+  }
+
+  ngOnInit(): void {
+    this.getCurrentLocation();
+  }
+
+  getCurrentLocation(): void {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          this.weatherService.searchByCoordinates(
+            position.coords.latitude,
+            position.coords.longitude,
+          );
+        },
+        (error) => {
+          console.warn('Geolocation denied or error:', error);
+          // If geolocation fails, defaults (Madrid) are already loaded by the service
+        },
+      );
+    } else {
+      console.warn('Geolocation is not supported by this browser.');
+    }
   }
 
   onSearch(): void {

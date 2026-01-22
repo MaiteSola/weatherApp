@@ -402,6 +402,137 @@ export class WeatherService {
     this.setTheme(themeKeys[nextIndex]);
   }
 
+  // Search by coordinates (Reverse Geocoding)
+  searchByCoordinates(lat: number, lon: number): void {
+    this.currentLat = lat;
+    this.currentLon = lon;
+
+    const reverseGeoUrl = `https://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&limit=1&appid=${this.apiKey}`;
+
+    this.http.get<GeoResponse[]>(reverseGeoUrl).subscribe({
+      next: (geoData) => {
+        if (!geoData || geoData.length === 0) {
+          console.warn('No location found for coordinates:', lat, lon);
+          return;
+        }
+
+        const location = geoData[0];
+        // Use local name if available, otherwise default name
+        const displayName = location.local_names?.['es'] || location.name;
+
+        // Reuse the logic to fetch weather data
+        this.fetchWeatherData(displayName, location.country);
+      },
+      error: (err) => {
+        console.error('Error fetching location name:', err);
+      },
+    });
+  }
+
+  // Refactored method to fetch weather data (shared by searchCity and searchByCoordinates)
+  private fetchWeatherData(displayName: string, country: string): void {
+    // Call Weather API with coordinates
+    const weatherUrl = `${this.apiUrl}?lat=${this.currentLat}&lon=${this.currentLon}&appid=${this.apiKey}&units=metric&lang=es`;
+
+    this.http.get<WeatherApiResponse>(weatherUrl).subscribe({
+      next: (data) => {
+        // Fetch forecast data to get accurate min/max for today
+        const forecastUrl = `${this.forecastUrl}?lat=${this.currentLat}&lon=${this.currentLon}&appid=${this.apiKey}&units=metric&lang=es`;
+
+        this.http.get<ForecastApiResponse>(forecastUrl).subscribe({
+          next: (forecastData) => {
+            // Use the city's timezone offset to determine "today"
+            const timezoneOffset = forecastData.city.timezone; // seconds
+            const now = new Date();
+            const cityTime = new Date(now.getTime() + timezoneOffset * 1000);
+            const todayInCity = cityTime.toISOString().split('T')[0];
+
+            // Filter forecast entries for today in the city's timezone
+            const todayForecasts = forecastData.list.filter((f) => {
+              const forecastTime = new Date((f.dt + timezoneOffset) * 1000);
+              const forecastDate = forecastTime.toISOString().split('T')[0];
+              return forecastDate === todayInCity;
+            });
+
+            // Calculate actual min/max from today's forecast data
+            let maxTemp = data.main.temp_max;
+            let minTemp = data.main.temp_min;
+
+            if (todayForecasts.length > 0) {
+              const temps = todayForecasts.map((f) => f.main.temp);
+              maxTemp = Math.max(...temps);
+              minTemp = Math.min(...temps);
+            }
+
+            // Map to CurrentWeather with correct min/max
+            const current: CurrentWeather = {
+              temperature: Math.round(data.main.temp),
+              condition: data.weather[0].description,
+              icon: this.mapIcon(data.weather[0].icon),
+              maxTemp: Math.round(maxTemp),
+              minTemp: Math.round(minTemp),
+              location: displayName,
+              country: country,
+            };
+            this.currentWeatherSubject.next(current);
+
+            // Update Theme based on weather id
+            const themeName = this.getThemeNameFromCondition(
+              data.weather[0].id,
+            );
+            this.setTheme(themeName);
+
+            // Update Stats
+            const stats: WeatherStats = {
+              wind: Math.round(data.wind.speed * 3.6), // Convert m/s to km/h
+              precipitation: data.rain ? data.rain['1h'] || 0 : 0, // Rain volume in last hour
+              uvIndex: 0, // Not available in standard API
+              humidity: data.main.humidity,
+              pressure: data.main.pressure,
+              visibility: Math.round(data.visibility / 100) / 10, // meters to km (with 1 decimal)
+              sunrise: new Date(data.sys.sunrise * 1000).toLocaleTimeString(
+                'es-ES',
+                {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                },
+              ),
+              sunset: new Date(data.sys.sunset * 1000).toLocaleTimeString(
+                'es-ES',
+                {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                },
+              ),
+            };
+            this.weatherStatsSubject.next(stats);
+
+            // Fetch forecasts with new coordinates
+            this.fetchHourlyForecast();
+            this.fetchDailyForecast(5);
+          },
+          error: (err) => {
+            console.error('Error fetching forecast for min/max:', err);
+            // Fallback to current weather min/max if forecast fails
+            const current: CurrentWeather = {
+              temperature: Math.round(data.main.temp),
+              condition: data.weather[0].description,
+              icon: this.mapIcon(data.weather[0].icon),
+              maxTemp: Math.round(data.main.temp_max),
+              minTemp: Math.round(data.main.temp_min),
+              location: displayName,
+              country: country,
+            };
+            this.currentWeatherSubject.next(current);
+          },
+        });
+      },
+      error: (err) => {
+        console.error('Error fetching weather:', err);
+      },
+    });
+  }
+
   // Search for a city
   searchCity(city: string): void {
     // Add to recent searches
@@ -429,113 +560,8 @@ export class WeatherService {
         // Use local name if available, otherwise default name
         const displayName = location.local_names?.['es'] || location.name;
 
-        // Call Weather API with coordinates
-        const weatherUrl = `${this.apiUrl}?lat=${this.currentLat}&lon=${this.currentLon}&appid=${this.apiKey}&units=metric&lang=es`;
-
-        this.http.get<WeatherApiResponse>(weatherUrl).subscribe({
-          next: (data) => {
-            // Fetch forecast data to get accurate min/max for today
-            const forecastUrl = `${this.forecastUrl}?lat=${this.currentLat}&lon=${this.currentLon}&appid=${this.apiKey}&units=metric&lang=es`;
-
-            this.http.get<ForecastApiResponse>(forecastUrl).subscribe({
-              next: (forecastData) => {
-                // Use the city's timezone offset to determine "today"
-                const timezoneOffset = forecastData.city.timezone; // seconds
-                const now = new Date();
-                const cityTime = new Date(
-                  now.getTime() + timezoneOffset * 1000,
-                );
-                const todayInCity = cityTime.toISOString().split('T')[0];
-
-                // Filter forecast entries for today in the city's timezone
-                const todayForecasts = forecastData.list.filter((f) => {
-                  const forecastTime = new Date((f.dt + timezoneOffset) * 1000);
-                  const forecastDate = forecastTime.toISOString().split('T')[0];
-                  return forecastDate === todayInCity;
-                });
-
-                // Calculate actual min/max from today's forecast data
-                let maxTemp = data.main.temp_max;
-                let minTemp = data.main.temp_min;
-
-                if (todayForecasts.length > 0) {
-                  const temps = todayForecasts.map((f) => f.main.temp);
-                  maxTemp = Math.max(...temps);
-                  minTemp = Math.min(...temps);
-                  console.log(
-                    `Today's temps in ${displayName}:`,
-                    temps,
-                    `Max: ${maxTemp}, Min: ${minTemp}`,
-                  );
-                }
-
-                // Map to CurrentWeather with correct min/max
-                const current: CurrentWeather = {
-                  temperature: Math.round(data.main.temp),
-                  condition: data.weather[0].description,
-                  icon: this.mapIcon(data.weather[0].icon),
-                  maxTemp: Math.round(maxTemp),
-                  minTemp: Math.round(minTemp),
-                  location: displayName,
-                  country: location.country,
-                };
-                this.currentWeatherSubject.next(current);
-
-                // Update Theme based on weather id
-                const themeName = this.getThemeNameFromCondition(
-                  data.weather[0].id,
-                );
-                this.setTheme(themeName);
-
-                // Update Stats
-                const stats: WeatherStats = {
-                  wind: Math.round(data.wind.speed * 3.6), // Convert m/s to km/h
-                  precipitation: data.rain ? data.rain['1h'] || 0 : 0, // Rain volume in last hour
-                  uvIndex: 0, // Not available in standard API
-                  humidity: data.main.humidity,
-                  pressure: data.main.pressure,
-                  visibility: Math.round(data.visibility / 100) / 10, // meters to km (with 1 decimal)
-                  sunrise: new Date(data.sys.sunrise * 1000).toLocaleTimeString(
-                    'es-ES',
-                    {
-                      hour: '2-digit',
-                      minute: '2-digit',
-                    },
-                  ),
-                  sunset: new Date(data.sys.sunset * 1000).toLocaleTimeString(
-                    'es-ES',
-                    {
-                      hour: '2-digit',
-                      minute: '2-digit',
-                    },
-                  ),
-                };
-                this.weatherStatsSubject.next(stats);
-
-                // Fetch forecasts with new coordinates
-                this.fetchHourlyForecast();
-                this.fetchDailyForecast(5);
-              },
-              error: (err) => {
-                console.error('Error fetching forecast for min/max:', err);
-                // Fallback to current weather min/max if forecast fails
-                const current: CurrentWeather = {
-                  temperature: Math.round(data.main.temp),
-                  condition: data.weather[0].description,
-                  icon: this.mapIcon(data.weather[0].icon),
-                  maxTemp: Math.round(data.main.temp_max),
-                  minTemp: Math.round(data.main.temp_min),
-                  location: displayName,
-                  country: location.country,
-                };
-                this.currentWeatherSubject.next(current);
-              },
-            });
-          },
-          error: (err) => {
-            console.error('Error fetching weather:', err);
-          },
-        });
+        // Call common weather fetch logic
+        this.fetchWeatherData(displayName, location.country);
       },
       error: (err) => {
         console.error('Error fetching coordinates:', err);

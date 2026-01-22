@@ -2,7 +2,7 @@
 <div
   class="w-full h-full overflow-y-auto overflow-x-hidden bg-[#121212] relative scroll-smooth"
 >
-  <div class="w-full pb-32 md:pb-24 md:max-w-7xl md:mx-auto">
+  <div class="w-full pb-32 md:pb-24 md:px-8">
     <!-- Header -->
     <app-weather-header></app-weather-header>
 
@@ -27,26 +27,28 @@
     <!-- Desktop: Layout con grid -->
     <ion-grid class="!p-0 hidden md:block">
       <ion-row class="ion-align-items-start h-full">
-        <!-- LEFT COLUMN - Main Weather, Hourly -->
-        <ion-col size="12" sizeMd="8" sizeLg="9" class="!px-0">
-          <div class="flex flex-col gap-6 md:gap-6">
+        <!-- LEFT COLUMN - Present (Weather + Stats) -->
+        <ion-col size="12" sizeMd="7" sizeLg="7" class="!px-0">
+          <div class="flex flex-col gap-6 md:gap-8">
             <!-- Current Weather Display -->
             <div class="px-0 md:px-6">
               <app-current-weather-display></app-current-weather-display>
             </div>
 
-            <!-- Hourly Forecast -->
-            <div class="px-0">
-              <app-hourly-forecast-list></app-hourly-forecast-list>
+            <!-- Quick Stats (Horizontal row) -->
+            <div class="px-0 md:px-6">
+              <app-quick-stats-panel></app-quick-stats-panel>
             </div>
           </div>
         </ion-col>
 
-        <!-- RIGHT COLUMN - Stats & Weekly Forecast -->
-        <ion-col size="12" sizeMd="4" sizeLg="3" class="!px-0 md:!px-6 !pt-0">
-          <div class="flex flex-col gap-4 md:gap-3">
-            <!-- Quick Stats -->
-            <app-quick-stats-panel></app-quick-stats-panel>
+        <!-- RIGHT COLUMN - Future (forecasts) -->
+        <ion-col size="12" sizeMd="5" sizeLg="5" class="!px-0 md:!px-6 !pt-0">
+          <div class="flex flex-col gap-6 md:gap-6">
+            <!-- Hourly Forecast -->
+            <div class="px-0">
+              <app-hourly-forecast-list></app-hourly-forecast-list>
+            </div>
 
             <!-- Weekly Forecast -->
             <div id="weekly-forecast-desktop">

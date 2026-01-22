@@ -1,44 +1,51 @@
-<section id="weekly-forecast" class="px-6 mb-4 md:px-0 md:flex-1 md:mt-6">
+<section id="weekly-forecast" class="px-6 mb-4 md:px-0 md:flex-1 md:mt-0">
   <ion-card class="!m-0 md:h-full">
-    <ion-card-content class="!p-5 md:!p-6">
-      <div class="flex items-center gap-2 mb-6 justify-between">
+    <ion-card-content class="!p-4 md:!p-5">
+      <div class="flex items-center gap-2 mb-3 justify-between">
         <div class="flex items-center gap-2">
-          <span class="material-symbols-outlined text-primary text-[24px]">
+          <span class="material-symbols-outlined text-primary text-[20px]">
             calendar_month
           </span>
-          <h3 class="text-white/90 text-sm font-bold uppercase tracking-widest">
+          <h3 class="text-white/90 text-xs font-bold uppercase tracking-widest">
             {{ getTitle() }}
           </h3>
         </div>
       </div>
 
       <!-- Container for forecast lists -->
-      <div class="space-y-5 animate-fade-in">
+      <div class="space-y-2 animate-fade-in">
         <div
           *ngFor="let item of forecastData"
-          class="flex items-center justify-between py-1.5"
+          class="flex items-center justify-between py-1"
         >
-          <div class="flex flex-col w-24 md:w-28 justify-center min-w-0">
-            <span class="text-white font-bold text-sm leading-tight truncate">
+          <!-- Day Name -->
+          <div class="w-12 md:w-14 shrink-0">
+            <span class="text-white font-bold text-sm leading-tight">
               {{ item.day }}
-            </span>
-            <span
-              class="text-white/50 text-[10px] font-bold uppercase tracking-wide leading-tight mt-0.5 truncate"
-            >
-              {{ item.text }}
             </span>
           </div>
 
-          <span class="material-symbols-outlined text-primary ml-2 text-[28px]">
+          <!-- Icon -->
+          <span
+            class="material-symbols-outlined text-primary text-[24px] shrink-0"
+          >
             {{ item.icon }}
           </span>
 
-          <div class="flex items-center gap-3 ml-auto">
-            <span class="text-white/40 text-sm font-medium w-7 text-right">
+          <!-- Weather Condition Text -->
+          <span
+            class="text-white/50 text-[9px] md:text-[10px] font-semibold uppercase tracking-wide w-16 md:w-20 text-center truncate shrink-0"
+          >
+            {{ item.text }}
+          </span>
+
+          <!-- Temperature Bar -->
+          <div class="flex items-center gap-2 ml-auto">
+            <span class="text-white/40 text-xs font-medium w-6 text-right">
               {{ item.min }}°
             </span>
             <div
-              class="w-20 md:w-24 h-1.5 bg-border-dark rounded-full overflow-hidden relative"
+              class="w-16 md:w-20 h-1.5 bg-border-dark rounded-full overflow-hidden relative"
             >
               <div
                 class="absolute h-full bg-gradient-to-r rounded-full"
@@ -49,7 +56,7 @@
                 }"
               ></div>
             </div>
-            <span class="text-white text-sm font-bold w-7 text-right">
+            <span class="text-white text-xs font-bold w-6 text-right">
               {{ item.max }}°
             </span>
           </div>
