@@ -471,6 +471,7 @@ export class WeatherService {
               icon: this.mapIcon(data.weather[0].icon),
               maxTemp: Math.round(maxTemp),
               minTemp: Math.round(minTemp),
+              feelsLike: Math.round(data.main.feels_like),
               location: displayName,
               country: country,
             };

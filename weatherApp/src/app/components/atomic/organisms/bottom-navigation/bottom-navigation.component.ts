@@ -2,7 +2,7 @@ import { Component, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 
-export type NavigationOption = '3-days' | '5-days' | 'settings';
+export type NavigationOption = '3-days' | '5-days' | 'map' | 'settings';
 
 @Component({
   selector: 'app-bottom-navigation',

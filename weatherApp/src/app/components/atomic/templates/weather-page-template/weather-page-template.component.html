@@ -2,64 +2,75 @@
 <div
   class="w-full h-full overflow-y-auto overflow-x-hidden bg-[#121212] relative scroll-smooth"
 >
-  <div class="w-full pb-32 md:pb-24 md:px-8">
+  <div class="w-full pb-32 md:pb-24 md:px-8" [class.h-full]="showMap">
     <!-- Header -->
     <app-weather-header></app-weather-header>
 
-    <!-- Recent Searches -->
-    <div class="md:px-6">
+    <!-- Recent Searches (hidden when map is shown) -->
+    <div class="md:px-6" *ngIf="!showMap">
       <app-recent-searches-list></app-recent-searches-list>
     </div>
 
-    <!-- Main Content Area -->
-    <div class="md:hidden">
-      <!-- Móvil: Layout simple sin grid -->
-      <app-current-weather-display></app-current-weather-display>
-      <app-quick-stats-panel></app-quick-stats-panel>
-      <app-hourly-forecast-list></app-hourly-forecast-list>
-      <div id="weekly-forecast">
-        <app-weekly-forecast-list
-          [days]="forecastDays"
-        ></app-weekly-forecast-list>
-      </div>
+    <!-- MAP VIEW -->
+    <div
+      *ngIf="showMap"
+      class="h-[calc(100vh-200px)] md:h-[calc(100vh-180px)] mt-4"
+    >
+      <app-weather-map></app-weather-map>
     </div>
 
-    <!-- Desktop: Layout con grid -->
-    <ion-grid class="!p-0 hidden md:block">
-      <ion-row class="ion-align-items-start h-full">
-        <!-- LEFT COLUMN - Present (Weather + Stats) -->
-        <ion-col size="12" sizeMd="7" sizeLg="7" class="!px-0">
-          <div class="flex flex-col gap-6 md:gap-8">
-            <!-- Current Weather Display -->
-            <div class="px-0 md:px-6">
-              <app-current-weather-display></app-current-weather-display>
-            </div>
+    <!-- WEATHER VIEW (hidden when map is shown) -->
+    <ng-container *ngIf="!showMap">
+      <!-- Main Content Area -->
+      <div class="md:hidden">
+        <!-- Móvil: Layout simple sin grid -->
+        <app-current-weather-display></app-current-weather-display>
+        <app-quick-stats-panel></app-quick-stats-panel>
+        <app-hourly-forecast-list></app-hourly-forecast-list>
+        <div id="weekly-forecast">
+          <app-weekly-forecast-list
+            [days]="forecastDays"
+          ></app-weekly-forecast-list>
+        </div>
+      </div>
 
-            <!-- Quick Stats (Horizontal row) -->
-            <div class="px-0 md:px-6">
-              <app-quick-stats-panel></app-quick-stats-panel>
-            </div>
-          </div>
-        </ion-col>
+      <!-- Desktop: Layout con grid -->
+      <ion-grid class="!p-0 hidden md:block">
+        <ion-row class="ion-align-items-start h-full">
+          <!-- LEFT COLUMN - Weather + Hourly Carousel -->
+          <ion-col size="12" sizeMd="7" sizeLg="7" class="!px-0">
+            <div class="flex flex-col gap-6">
+              <!-- Current Weather Display -->
+              <div class="px-0 md:px-6">
+                <app-current-weather-display></app-current-weather-display>
+              </div>
 
-        <!-- RIGHT COLUMN - Future (forecasts) -->
-        <ion-col size="12" sizeMd="5" sizeLg="5" class="!px-0 md:!px-6 !pt-0">
-          <div class="flex flex-col gap-6 md:gap-6">
-            <!-- Hourly Forecast -->
-            <div class="px-0">
-              <app-hourly-forecast-list></app-hourly-forecast-list>
+              <!-- Hourly Forecast Carousel (below weather) -->
+              <div class="px-0">
+                <app-hourly-forecast-list></app-hourly-forecast-list>
+              </div>
             </div>
+          </ion-col>
 
-            <!-- Weekly Forecast -->
-            <div id="weekly-forecast-desktop">
-              <app-weekly-forecast-list
-                [days]="forecastDays"
-              ></app-weekly-forecast-list>
+          <!-- RIGHT COLUMN - Stats (3x2) + Weekly Forecast -->
+          <ion-col size="12" sizeMd="5" sizeLg="5" class="!px-0 md:!px-6 !pt-0">
+            <div class="flex flex-col gap-4 items-center">
+              <!-- Quick Stats (3x2 grid) -->
+              <div class="w-full">
+                <app-quick-stats-panel></app-quick-stats-panel>
+              </div>
+
+              <!-- Weekly Forecast (centered) -->
+              <div id="weekly-forecast-desktop">
+                <app-weekly-forecast-list
+                  [days]="forecastDays"
+                ></app-weekly-forecast-list>
+              </div>
             </div>
-          </div>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ng-container>
   </div>
 </div>
 

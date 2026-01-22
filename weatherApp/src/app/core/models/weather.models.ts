@@ -50,6 +50,7 @@ export interface CurrentWeather {
   icon: string;
   maxTemp: number;
   minTemp: number;
+  feelsLike?: number;
   location: string;
   country: string;
 }

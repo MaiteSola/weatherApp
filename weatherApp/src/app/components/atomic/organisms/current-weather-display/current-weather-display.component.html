@@ -48,18 +48,22 @@
       {{ weather.condition }}
     </p>
 
-    <!-- Max/Min -->
-    <div class="flex gap-3 md:gap-4 mt-1 md:mt-2 lg:mt-4">
+    <!-- Feels Like & Max/Min -->
+    <div class="flex flex-col items-center md:items-start mt-2">
       <span
-        class="text-white/60 text-xs sm:text-sm md:text-base lg:text-lg font-medium"
+        class="text-white/80 text-sm md:text-base font-semibold mb-1"
+        *ngIf="weather.feelsLike !== undefined"
       >
-        Máx: {{ weather.maxTemp }}°
+        Sensación: {{ weather.feelsLike }}°
       </span>
-      <span
-        class="text-white/60 text-xs sm:text-sm md:text-base lg:text-lg font-medium"
-      >
-        Mín: {{ weather.minTemp }}°
-      </span>
+      <div class="flex gap-3 md:gap-4">
+        <span class="text-white/60 text-xs sm:text-sm md:text-base font-medium">
+          Máx: {{ weather.maxTemp }}°
+        </span>
+        <span class="text-white/60 text-xs sm:text-sm md:text-base font-medium">
+          Mín: {{ weather.minTemp }}°
+        </span>
+      </div>
     </div>
   </div>
 </main>

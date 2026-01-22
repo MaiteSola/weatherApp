@@ -1,0 +1,72 @@
+<section class="w-full h-full flex flex-col bg-[#121212]">
+  <!-- Layer Selector -->
+  <div
+    class="flex items-center justify-center gap-2 p-4 bg-surface-dark/50 backdrop-blur-md"
+  >
+    <button
+      *ngFor="let layer of layerOptions"
+      (click)="onLayerChange(layer.id)"
+      class="flex items-center gap-2 px-4 py-2 rounded-full transition-all"
+      [ngClass]="{
+        'bg-primary text-black font-bold': selectedLayer === layer.id,
+        'bg-surface-dark/60 text-white/60 hover:bg-surface-dark/80':
+          selectedLayer !== layer.id,
+      }"
+    >
+      <span class="material-symbols-outlined text-[18px]">
+        {{ layer.icon }}
+      </span>
+      <span class="text-xs font-semibold hidden md:inline">{{
+        layer.label
+      }}</span>
+    </button>
+
+    <!-- Center on location button -->
+    <button
+      (click)="centerOnLocation()"
+      class="flex items-center gap-2 px-4 py-2 rounded-full bg-surface-dark/60 text-white/60 hover:bg-surface-dark/80 transition-all ml-4"
+    >
+      <span class="material-symbols-outlined text-[18px]"> my_location </span>
+    </button>
+  </div>
+
+  <!-- Map Container -->
+  <div id="weather-map" class="flex-1 w-full min-h-[400px]"></div>
+
+  <!-- Legend -->
+  <div
+    class="flex items-center justify-center gap-4 p-3 bg-surface-dark/50 backdrop-blur-md"
+  >
+    <div class="flex items-center gap-2" *ngIf="selectedLayer === 'temp'">
+      <span class="text-xs text-white/60">Frío</span>
+      <div
+        class="w-32 h-2 rounded-full bg-gradient-to-r from-blue-500 via-green-400 via-yellow-400 to-red-500"
+      ></div>
+      <span class="text-xs text-white/60">Caliente</span>
+    </div>
+    <div
+      class="flex items-center gap-2"
+      *ngIf="selectedLayer === 'precipitation'"
+    >
+      <span class="text-xs text-white/60">Poco</span>
+      <div
+        class="w-32 h-2 rounded-full bg-gradient-to-r from-transparent via-blue-400 to-blue-700"
+      ></div>
+      <span class="text-xs text-white/60">Mucho</span>
+    </div>
+    <div class="flex items-center gap-2" *ngIf="selectedLayer === 'clouds'">
+      <span class="text-xs text-white/60">Despejado</span>
+      <div
+        class="w-32 h-2 rounded-full bg-gradient-to-r from-transparent to-gray-400"
+      ></div>
+      <span class="text-xs text-white/60">Nublado</span>
+    </div>
+    <div class="flex items-center gap-2" *ngIf="selectedLayer === 'wind'">
+      <span class="text-xs text-white/60">Calma</span>
+      <div
+        class="w-32 h-2 rounded-full bg-gradient-to-r from-green-400 via-yellow-400 to-red-500"
+      ></div>
+      <span class="text-xs text-white/60">Fuerte</span>
+    </div>
+  </div>
+</section>

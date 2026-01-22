@@ -12,6 +12,7 @@ import {
   NavigationOption,
 } from '../../organisms/bottom-navigation/bottom-navigation.component';
 import { SettingsModalComponent } from '../../organisms/settings-modal/settings-modal.component';
+import { WeatherMapComponent } from '../../organisms/weather-map/weather-map.component';
 
 @Component({
   selector: 'app-weather-page-template',
@@ -29,11 +30,13 @@ import { SettingsModalComponent } from '../../organisms/settings-modal/settings-
     WeeklyForecastListComponent,
     BottomNavigationComponent,
     SettingsModalComponent,
+    WeatherMapComponent,
   ],
 })
 export class WeatherPageTemplateComponent {
   @Input() forecastDays: 3 | 5 = 3;
   @Input() settingsModalOpen = false;
+  @Input() showMap = false;
   @Output() navigationChange = new EventEmitter<NavigationOption>();
   @Output() settingsClose = new EventEmitter<void>();
 

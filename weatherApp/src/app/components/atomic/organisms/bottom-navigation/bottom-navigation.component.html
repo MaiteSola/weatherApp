@@ -57,6 +57,33 @@
         </ion-label>
       </ion-tab-button>
 
+      <!-- Map Button -->
+      <ion-tab-button
+        (click)="onNavClick('map')"
+        [class.tab-selected]="isActive('map')"
+        class="flex flex-col items-center gap-1 cursor-pointer hover:scale-105 transition-all min-w-0 flex-1"
+      >
+        <ion-icon class="hidden"></ion-icon>
+        <span
+          class="material-symbols-outlined text-[24px]"
+          [ngClass]="{
+            'text-primary fill-1': isActive('map'),
+            'text-white/40': !isActive('map'),
+          }"
+        >
+          map
+        </span>
+        <ion-label
+          [ngClass]="{
+            'text-primary': isActive('map'),
+            'text-white/40': !isActive('map'),
+          }"
+          class="text-[10px] font-bold"
+        >
+          Mapa
+        </ion-label>
+      </ion-tab-button>
+
       <!-- Settings Button -->
       <ion-tab-button
         (click)="onNavClick('settings')"

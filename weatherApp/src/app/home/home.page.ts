@@ -16,22 +16,28 @@ import { WeatherService } from '../core/services/weather.service';
 export class HomePage implements OnInit {
   forecastDays: 3 | 5 = 3;
   settingsModalOpen = false;
+  showMap = false;
 
   constructor(private weatherService: WeatherService) {}
 
   ngOnInit(): void {
-    // Load initial weather data for Madrid
-    this.weatherService.searchCity('Madrid');
+    // Initial weather will be loaded by geolocation in header component
   }
 
   onNavigationChange(option: NavigationOption): void {
     if (option === 'settings') {
       this.settingsModalOpen = true;
+      this.showMap = false;
     } else if (option === '3-days') {
       this.forecastDays = 3;
       this.settingsModalOpen = false;
+      this.showMap = false;
     } else if (option === '5-days') {
       this.forecastDays = 5;
+      this.settingsModalOpen = false;
+      this.showMap = false;
+    } else if (option === 'map') {
+      this.showMap = true;
       this.settingsModalOpen = false;
     }
   }
