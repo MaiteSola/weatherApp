@@ -537,20 +537,11 @@ export class WeatherService {
               humidity: data.main.humidity,
               pressure: data.main.pressure,
               visibility: Math.round(data.visibility / 100) / 10, // meters to km (with 1 decimal)
-              sunrise: new Date(data.sys.sunrise * 1000).toLocaleTimeString(
-                'es-ES',
-                {
-                  hour: '2-digit',
-                  minute: '2-digit',
-                },
+              sunrise: this.formatTimeWithOffset(
+                data.sys.sunrise,
+                data.timezone,
               ),
-              sunset: new Date(data.sys.sunset * 1000).toLocaleTimeString(
-                'es-ES',
-                {
-                  hour: '2-digit',
-                  minute: '2-digit',
-                },
-              ),
+              sunset: this.formatTimeWithOffset(data.sys.sunset, data.timezone),
             };
             this.weatherStatsSubject.next(stats);
 
@@ -679,6 +670,16 @@ export class WeatherService {
     if (id === 800) return 'sunny';
     if (id > 800) return 'cloudy';
     return 'sunny';
+  }
+
+  private formatTimeWithOffset(
+    timestamp: number,
+    timezoneOffset: number,
+  ): string {
+    const date = new Date((timestamp + timezoneOffset) * 1000);
+    const hours = date.getUTCHours().toString().padStart(2, '0');
+    const minutes = date.getUTCMinutes().toString().padStart(2, '0');
+    return `${hours}:${minutes}`;
   }
 
   // Get recent searches
