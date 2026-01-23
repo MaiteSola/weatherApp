@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { Observable } from 'rxjs';
+import { TranslateModule } from '@ngx-translate/core';
 import { WeatherService } from '../../../../core/services/weather.service';
 import { CurrentWeather } from '../../../../core/models/weather.models';
 
@@ -11,7 +12,7 @@ import { CurrentWeather } from '../../../../core/models/weather.models';
   templateUrl: './weather-header.component.html',
   styleUrls: ['./weather-header.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, IonicModule],
+  imports: [CommonModule, FormsModule, IonicModule, TranslateModule],
 })
 export class WeatherHeaderComponent implements OnInit {
   @Output() search = new EventEmitter<string>();

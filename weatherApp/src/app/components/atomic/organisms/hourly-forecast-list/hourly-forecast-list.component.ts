@@ -3,19 +3,25 @@ import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { WeatherService } from '../../../../core/services/weather.service';
 import { HourlyForecast } from '../../../../core/models/weather.models';
+import { TranslateModule } from '@ngx-translate/core';
+import { TemperaturePipe } from 'src/app/core/pipes/temperature.pipe';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-hourly-forecast-list',
   templateUrl: './hourly-forecast-list.component.html',
   styleUrls: ['./hourly-forecast-list.component.scss'],
   standalone: true,
-  imports: [CommonModule, IonicModule],
+  imports: [CommonModule, IonicModule, TranslateModule, TemperaturePipe],
 })
 export class HourlyForecastListComponent implements OnInit {
   @ViewChild('scrollContainer') scrollContainer!: ElementRef;
   hourlyData: HourlyForecast[] = [];
+  unit$: Observable<'celsius' | 'fahrenheit'>;
 
-  constructor(private weatherService: WeatherService) {}
+  constructor(private weatherService: WeatherService) {
+    this.unit$ = this.weatherService.unit$;
+  }
 
   ngOnInit(): void {
     // Subscribe to hourly forecast updates

@@ -4,6 +4,8 @@ import { IonicModule } from '@ionic/angular';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { WeatherService } from '../../../../core/services/weather.service';
+import { TranslateModule } from '@ngx-translate/core';
+import { TemperaturePipe } from 'src/app/core/pipes/temperature.pipe';
 import {
   CurrentWeather,
   WeatherTheme,
@@ -14,11 +16,12 @@ import {
   templateUrl: './current-weather-display.component.html',
   styleUrls: ['./current-weather-display.component.scss'],
   standalone: true,
-  imports: [CommonModule, IonicModule],
+  imports: [CommonModule, IonicModule, TranslateModule, TemperaturePipe],
 })
 export class CurrentWeatherDisplayComponent implements OnInit, OnDestroy {
   currentWeather$: Observable<CurrentWeather>;
   currentTheme$: Observable<WeatherTheme>;
+  unit$: Observable<'celsius' | 'fahrenheit'>;
 
   currentTheme: WeatherTheme | null = null;
   private destroy$ = new Subject<void>();
@@ -26,6 +29,7 @@ export class CurrentWeatherDisplayComponent implements OnInit, OnDestroy {
   constructor(private weatherService: WeatherService) {
     this.currentWeather$ = this.weatherService.currentWeather$;
     this.currentTheme$ = this.weatherService.currentTheme$;
+    this.unit$ = this.weatherService.unit$;
   }
 
   ngOnInit(): void {

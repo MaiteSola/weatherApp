@@ -5,12 +5,14 @@ import { Observable } from 'rxjs';
 import { WeatherService } from '../../../../core/services/weather.service';
 import { RecentSearch } from '../../../../core/models/weather.models';
 
+import { TranslateModule } from '@ngx-translate/core';
+
 @Component({
   selector: 'app-recent-searches-list',
   templateUrl: './recent-searches-list.component.html',
   styleUrls: ['./recent-searches-list.component.scss'],
   standalone: true,
-  imports: [CommonModule, IonicModule],
+  imports: [CommonModule, IonicModule, TranslateModule],
 })
 export class RecentSearchesListComponent {
   recentSearches$: Observable<RecentSearch[]>;

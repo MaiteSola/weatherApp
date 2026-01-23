@@ -2,6 +2,8 @@ import { Component, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 
+import { TranslateModule } from '@ngx-translate/core';
+
 export type NavigationOption = '3-days' | '5-days' | 'map' | 'settings';
 
 @Component({
@@ -9,7 +11,7 @@ export type NavigationOption = '3-days' | '5-days' | 'map' | 'settings';
   templateUrl: './bottom-navigation.component.html',
   styleUrls: ['./bottom-navigation.component.scss'],
   standalone: true,
-  imports: [CommonModule, IonicModule],
+  imports: [CommonModule, IonicModule, TranslateModule],
 })
 export class BottomNavigationComponent {
   @Output() navigationChange = new EventEmitter<NavigationOption>();

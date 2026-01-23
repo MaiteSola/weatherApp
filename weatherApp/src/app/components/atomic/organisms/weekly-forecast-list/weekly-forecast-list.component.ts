@@ -3,20 +3,26 @@ import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { WeatherService } from '../../../../core/services/weather.service';
 import { DailyForecast } from '../../../../core/models/weather.models';
+import { TranslateModule } from '@ngx-translate/core';
+import { TemperaturePipe } from 'src/app/core/pipes/temperature.pipe';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-weekly-forecast-list',
   templateUrl: './weekly-forecast-list.component.html',
   styleUrls: ['./weekly-forecast-list.component.scss'],
   standalone: true,
-  imports: [CommonModule, IonicModule],
+  imports: [CommonModule, IonicModule, TranslateModule, TemperaturePipe],
 })
 export class WeeklyForecastListComponent implements OnChanges {
   @Input() days: 3 | 5 = 3;
 
   forecastData: DailyForecast[] = [];
+  unit$: Observable<'celsius' | 'fahrenheit'>;
 
-  constructor(private weatherService: WeatherService) {}
+  constructor(private weatherService: WeatherService) {
+    this.unit$ = this.weatherService.unit$;
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['days']) {
@@ -41,7 +47,9 @@ export class WeeklyForecastListComponent implements OnChanges {
     });
   }
 
-  getTitle(): string {
-    return `Pronóstico ${this.days} Días`;
+  getTitleKey(): string {
+    return this.days === 3
+      ? 'NAVIGATION.FORECAST_3_DAYS'
+      : 'NAVIGATION.FORECAST_5_DAYS';
   }
 }

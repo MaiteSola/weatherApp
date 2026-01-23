@@ -1,12 +1,12 @@
 <section id="weekly-forecast" class="px-6 mb-4 md:px-0 md:flex-1 md:mt-0">
-  <ion-card class="!m-0 md:h-auto md:max-w-sm">
+  <ion-card class="!m-0 md:h-auto md:max-w-md w-full">
     <ion-card-content class="!p-4 md:!p-5">
       <div class="flex items-center gap-2 mb-3">
         <span class="material-symbols-outlined text-primary text-[20px]">
           calendar_month
         </span>
         <h3 class="text-white/90 text-xs font-bold uppercase tracking-widest">
-          {{ getTitle() }}
+          {{ getTitleKey() | translate }}
         </h3>
       </div>
 
@@ -15,23 +15,23 @@
         <div *ngFor="let item of forecastData" class="flex items-center py-0.5">
           <!-- Left Group: Day + Icon + Condition -->
           <div class="flex items-center gap-3">
-            <span class="text-white font-bold text-sm w-10">
-              {{ item.day }}
+            <span class="text-white font-bold text-sm w-14">
+              {{ item.day | translate }}
             </span>
             <span class="material-symbols-outlined text-primary text-[22px]">
               {{ item.icon }}
             </span>
             <span
-              class="text-white/50 text-[10px] font-semibold uppercase tracking-wide"
+              class="text-white/50 text-[10px] font-semibold uppercase tracking-wide truncate max-w-[120px]"
             >
-              {{ item.text }}
+              {{ item.text | translate }}
             </span>
           </div>
 
           <!-- Temperature Bar (pushed to right) -->
           <div class="flex items-center gap-2 ml-auto">
             <span class="text-white/40 text-xs font-medium">
-              {{ item.min }}°
+              {{ item.min | temperature: (unit$ | async) }}
             </span>
             <div
               class="w-20 h-1.5 bg-border-dark rounded-full overflow-hidden relative"
@@ -45,7 +45,9 @@
                 }"
               ></div>
             </div>
-            <span class="text-white text-xs font-bold"> {{ item.max }}° </span>
+            <span class="text-white text-xs font-bold">
+              {{ item.max | temperature: (unit$ | async) }}
+            </span>
           </div>
         </div>
       </div>

@@ -1,3 +1,91 @@
 {
-  "HELLO": "Hello world"
+  "APP": {
+    "TITLE": "Weather App"
+  },
+  "HEADER": {
+    "SEARCH_PLACEHOLDER": "Search city...",
+    "CURRENT_LOCATION": "Current location"
+  },
+  "WEATHER": {
+    "FEELS_LIKE": "Feels like",
+    "MAX": "Max",
+    "MIN": "Min",
+    "CONDITION": {
+      "THUNDERSTORM": "Thunderstorm",
+      "DRIZZLE": "Drizzle",
+      "RAIN": "Rain",
+      "SNOW": "Snow",
+      "ATMOSPHERE": "Mist/Fog",
+      "CLEAR": "Clear",
+      "FEW_CLOUDS": "Few clouds",
+      "SCATTERED_CLOUDS": "Scattered clouds",
+      "BROKEN_CLOUDS": "Broken clouds",
+      "OVERCAST_CLOUDS": "Overcast clouds",
+      "UNKNOWN": "Unknown"
+    }
+  },
+  "STATS": {
+    "WIND": "WIND",
+    "PRECIPITATION": "PRECIPITATION",
+    "HUMIDITY": "HUMIDITY",
+    "VISIBILITY": "VISIBILITY",
+    "PRESSURE": "PRESSURE",
+    "SUN": "SUN"
+  },
+  "FORECAST": {
+    "HOURLY_TITLE": "Hourly forecast",
+    "HOURLY_LABEL": "12 HOURS",
+    "NOW": "Now",
+    "WEEKLY_TITLE": "5-DAY FORECAST",
+    "TODAY": "Today",
+    "TOMORROW": "Tomorrow"
+  },
+  "NAVIGATION": {
+    "FORECAST_3_DAYS": "3-Day Forecast",
+    "FORECAST_5_DAYS": "5-Day Forecast",
+    "MAP": "Map",
+    "SETTINGS": "Settings"
+  },
+  "MAP": {
+    "LAYERS": {
+      "TEMP": "Temperature",
+      "PRECIPITATION": "Precipitation",
+      "CLOUDS": "Clouds",
+      "WIND": "Wind"
+    },
+    "LEGEND": {
+      "COLD": "Cold",
+      "HOT": "Hot",
+      "LOW": "Low",
+      "HIGH": "High",
+      "CLEAR": "Clear",
+      "CLOUDY": "Cloudy",
+      "CALM": "Calm",
+      "STRONG": "Strong"
+    }
+  },
+  "RECENT_SEARCHES": {
+    "TITLE": "RECENT"
+  },
+  "DAYS": {
+    "MON": "Mon",
+    "TUE": "Tue",
+    "WED": "Wed",
+    "THU": "Thu",
+    "FRI": "Fri",
+    "SAT": "Sat",
+    "SUN": "Sun"
+  },
+  "UNITS": {
+    "KMH": "km/h",
+    "MM": "mm",
+    "HPA": "hPa",
+    "KM": "km",
+    "PERCENT": "%"
+  },
+  "SETTINGS": {
+    "TITLE": "Settings",
+    "LANGUAGE": "Language",
+    "UNITS": "Units"
+  }
 }

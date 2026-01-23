@@ -1,3 +1,91 @@
 {
-  "HELLO": "Hola mundo"
+  "APP": {
+    "TITLE": "Weather App"
+  },
+  "HEADER": {
+    "SEARCH_PLACEHOLDER": "Buscar ciudad...",
+    "CURRENT_LOCATION": "Ubicación actual"
+  },
+  "WEATHER": {
+    "FEELS_LIKE": "Sensación",
+    "MAX": "Máx",
+    "MIN": "Mín",
+    "CONDITION": {
+      "THUNDERSTORM": "Tormenta",
+      "DRIZZLE": "Llovizna",
+      "RAIN": "Lluvia",
+      "SNOW": "Nieve",
+      "ATMOSPHERE": "Niebla",
+      "CLEAR": "Despejado",
+      "FEW_CLOUDS": "Pocas nubes",
+      "SCATTERED_CLOUDS": "Nubes dispersas",
+      "BROKEN_CLOUDS": "Nublado",
+      "OVERCAST_CLOUDS": "Muy nuboso",
+      "UNKNOWN": "Desconocido"
+    }
+  },
+  "STATS": {
+    "WIND": "VIENTO",
+    "PRECIPITATION": "PRECIPITACIÓN",
+    "HUMIDITY": "HUMEDAD",
+    "VISIBILITY": "VISIBILITY",
+    "PRESSURE": "PRESIÓN",
+    "SUN": "SOL"
+  },
+  "FORECAST": {
+    "HOURLY_TITLE": "Pronóstico por horas",
+    "HOURLY_LABEL": "12 HORAS",
+    "NOW": "Ahora",
+    "WEEKLY_TITLE": "PRONÓSTICO 5 DÍAS",
+    "TODAY": "Hoy",
+    "TOMORROW": "Mañana"
+  },
+  "NAVIGATION": {
+    "FORECAST_3_DAYS": "Pronóstico 3 Días",
+    "FORECAST_5_DAYS": "Pronóstico 5 Días",
+    "MAP": "Mapa",
+    "SETTINGS": "Ajustes"
+  },
+  "MAP": {
+    "LAYERS": {
+      "TEMP": "Temperatura",
+      "PRECIPITATION": "Precipitación",
+      "CLOUDS": "Nubes",
+      "WIND": "Viento"
+    },
+    "LEGEND": {
+      "COLD": "Frío",
+      "HOT": "Caliente",
+      "LOW": "Poco",
+      "HIGH": "Mucho",
+      "CLEAR": "Despejado",
+      "CLOUDY": "Nublado",
+      "CALM": "Calma",
+      "STRONG": "Fuerte"
+    }
+  },
+  "RECENT_SEARCHES": {
+    "TITLE": "RECIENTES"
+  },
+  "DAYS": {
+    "MON": "Lun",
+    "TUE": "Mar",
+    "WED": "Mié",
+    "THU": "Jue",
+    "FRI": "Vie",
+    "SAT": "Sáb",
+    "SUN": "Dom"
+  },
+  "UNITS": {
+    "KMH": "km/h",
+    "MM": "mm",
+    "HPA": "hPa",
+    "KM": "km",
+    "PERCENT": "%"
+  },
+  "SETTINGS": {
+    "TITLE": "Configuración",
+    "LANGUAGE": "Idioma",
+    "UNITS": "Unidades"
+  }
 }

@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { WeatherService } from '../../../../core/services/weather.service';
+import { TranslateModule } from '@ngx-translate/core';
 import * as L from 'leaflet';
 
 interface MapLayerOption {
@@ -15,7 +16,7 @@ interface MapLayerOption {
   templateUrl: './weather-map.component.html',
   styleUrls: ['./weather-map.component.scss'],
   standalone: true,
-  imports: [CommonModule, IonicModule],
+  imports: [CommonModule, IonicModule, TranslateModule],
 })
 export class WeatherMapComponent implements OnInit, AfterViewInit, OnDestroy {
   private map!: L.Map;
@@ -25,10 +26,10 @@ export class WeatherMapComponent implements OnInit, AfterViewInit, OnDestroy {
   selectedLayer: 'temp' | 'precipitation' | 'clouds' | 'wind' = 'temp';
 
   layerOptions: MapLayerOption[] = [
-    { id: 'temp', label: 'Temperatura', icon: 'thermostat' },
-    { id: 'precipitation', label: 'Precipitación', icon: 'rainy' },
-    { id: 'clouds', label: 'Nubes', icon: 'cloud' },
-    { id: 'wind', label: 'Viento', icon: 'air' },
+    { id: 'temp', label: 'MAP.LAYERS.TEMP', icon: 'thermostat' },
+    { id: 'precipitation', label: 'MAP.LAYERS.PRECIPITATION', icon: 'rainy' },
+    { id: 'clouds', label: 'MAP.LAYERS.CLOUDS', icon: 'cloud' },
+    { id: 'wind', label: 'MAP.LAYERS.WIND', icon: 'air' },
   ];
 
   private currentLat = 40.4168;
@@ -37,10 +38,15 @@ export class WeatherMapComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(private weatherService: WeatherService) {}
 
   ngOnInit(): void {
-    // Subscribe to current weather to get coordinates
-    this.weatherService.currentWeather$.subscribe((weather) => {
-      // The service stores currentLat/Lon internally, but we can approximate from city
-      // For now we'll use the default and update when map is ready
+    // Subscribe to coordinates changes to update map
+    this.weatherService.currentCoordinates$.subscribe((coords) => {
+      this.currentLat = coords.lat;
+      this.currentLon = coords.lon;
+
+      // Update map view if map is already initialized
+      if (this.map) {
+        this.map.setView([coords.lat, coords.lon], 8);
+      }
     });
   }
 
@@ -150,9 +156,10 @@ export class WeatherMapComponent implements OnInit, AfterViewInit, OnDestroy {
   centerOnLocation(): void {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
-        this.map.setView(
-          [position.coords.latitude, position.coords.longitude],
-          10,
+        // Use weather service to update coordinates globally
+        this.weatherService.searchByCoordinates(
+          position.coords.latitude,
+          position.coords.longitude,
         );
       });
     }

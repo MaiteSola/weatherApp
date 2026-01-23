@@ -1,0 +1,92 @@
+{
+  "APP": {
+    "TITLE": "Eguraldia"
+  },
+  "HEADER": {
+    "SEARCH_PLACEHOLDER": "Bilatu hiria...",
+    "CURRENT_LOCATION": "Uneko kokapena"
+  },
+  "WEATHER": {
+    "FEELS_LIKE": "Sentsazioa",
+    "MAX": "Max",
+    "MIN": "Min",
+    "CONDITION": {
+      "THUNDERSTORM": "Ekaitza",
+      "DRIZZLE": "Zirimiria",
+      "RAIN": "Euria",
+      "SNOW": "Elurra",
+      "ATMOSPHERE": "Lainoa",
+      "CLEAR": "Garbia",
+      "FEW_CLOUDS": "Hodei gutxi",
+      "SCATTERED_CLOUDS": "Hodeiak",
+      "BROKEN_CLOUDS": "Hodeitsua",
+      "OVERCAST_CLOUDS": "Oso hodeitsua",
+      "UNKNOWN": "Ezezaguna",
+      "CLOUDY": "Hodeitsua"
+    }
+  },
+  "STATS": {
+    "WIND": "HAIZEA",
+    "PRECIPITATION": "PREZIPITAZIOA",
+    "HUMIDITY": "HEZETASUNA",
+    "VISIBILITY": "IKUSGARRITASUNA",
+    "PRESSURE": "PRESIOA",
+    "SUN": "EGUZKIA"
+  },
+  "FORECAST": {
+    "HOURLY_TITLE": "Orduko iragarpena",
+    "HOURLY_LABEL": "12 ORDU",
+    "NOW": "Orain",
+    "WEEKLY_TITLE": "5 EGUNEKO IRAGARPENA",
+    "TODAY": "Gaur",
+    "TOMORROW": "Bihar"
+  },
+  "NAVIGATION": {
+    "FORECAST_3_DAYS": "3 Eguneko Iragarpena",
+    "FORECAST_5_DAYS": "5 Eguneko Iragarpena",
+    "MAP": "Mapa",
+    "SETTINGS": "Ezarpenak"
+  },
+  "MAP": {
+    "LAYERS": {
+      "TEMP": "Tenperatura",
+      "PRECIPITATION": "Prezipitazioa",
+      "CLOUDS": "Hodeiak",
+      "WIND": "Haizea"
+    },
+    "LEGEND": {
+      "COLD": "Hotza",
+      "HOT": "Beroa",
+      "LOW": "Gutxi",
+      "HIGH": "Asko",
+      "CLEAR": "Garbia",
+      "CLOUDY": "Hodeitsua",
+      "CALM": "Bare",
+      "STRONG": "Indartsua"
+    }
+  },
+  "RECENT_SEARCHES": {
+    "TITLE": "AZKEN BILAKETAK"
+  },
+  "DAYS": {
+    "MON": "Al.",
+    "TUE": "Ar.",
+    "WED": "Az.",
+    "THU": "Og.",
+    "FRI": "Ol.",
+    "SAT": "Lr.",
+    "SUN": "Ig."
+  },
+  "UNITS": {
+    "KMH": "km/h",
+    "MM": "mm",
+    "HPA": "hPa",
+    "KM": "km",
+    "PERCENT": "%"
+  },
+  "SETTINGS": {
+    "TITLE": "Ezarpenak",
+    "LANGUAGE": "Hizkuntza",
+    "UNITS": "Unitateak"
+  }
+}

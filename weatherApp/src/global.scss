@@ -84,6 +84,7 @@ ion-footer {
   right: 0;
   z-index: 100;
   margin: 0 !important;
+  margin-top: 0 !important;
   padding: 0 !important;
 }
 
@@ -95,6 +96,7 @@ ion-footer ion-toolbar {
   --min-height: 80px;
   border-top: 1px solid var(--app-border-dark);
   margin: 0;
+  margin-top: 0;
   padding: 0;
 }
 

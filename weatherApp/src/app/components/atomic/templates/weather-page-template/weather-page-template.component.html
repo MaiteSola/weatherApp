@@ -2,7 +2,10 @@
 <div
   class="w-full h-full overflow-y-auto overflow-x-hidden bg-[#121212] relative scroll-smooth"
 >
-  <div class="w-full pb-32 md:pb-24 md:px-8" [class.h-full]="showMap">
+  <div
+    class="w-full pb-24 md:pb-0 pt-16 md:px-8 max-w-[1600px] mx-auto"
+    [class.h-full]="showMap"
+  >
     <!-- Header -->
     <app-weather-header></app-weather-header>
 
@@ -34,42 +37,49 @@
         </div>
       </div>
 
-      <!-- Desktop: Layout con grid -->
-      <ion-grid class="!p-0 hidden md:block">
-        <ion-row class="ion-align-items-start h-full">
-          <!-- LEFT COLUMN - Weather + Hourly Carousel -->
-          <ion-col size="12" sizeMd="7" sizeLg="7" class="!px-0">
-            <div class="flex flex-col gap-6">
-              <!-- Current Weather Display -->
-              <div class="px-0 md:px-6">
-                <app-current-weather-display></app-current-weather-display>
-              </div>
+      <!-- Desktop: Layout con grid centrado verticalmente -->
+      <div class="hidden md:block md:mt-0">
+        <ion-grid class="!p-0 w-full">
+          <ion-row class="ion-align-items-start">
+            <!-- LEFT COLUMN - Weather + Hourly Carousel -->
+            <ion-col size="12" sizeMd="7" sizeLg="7" class="!px-0">
+              <div class="flex flex-col gap-2">
+                <!-- Current Weather Display -->
+                <div class="px-0 md:px-6">
+                  <app-current-weather-display></app-current-weather-display>
+                </div>
 
-              <!-- Hourly Forecast Carousel (below weather) -->
-              <div class="px-0">
-                <app-hourly-forecast-list></app-hourly-forecast-list>
+                <!-- Hourly Forecast Carousel (below weather) -->
+                <div class="px-0">
+                  <app-hourly-forecast-list></app-hourly-forecast-list>
+                </div>
               </div>
-            </div>
-          </ion-col>
+            </ion-col>
 
-          <!-- RIGHT COLUMN - Stats (3x2) + Weekly Forecast -->
-          <ion-col size="12" sizeMd="5" sizeLg="5" class="!px-0 md:!px-6 !pt-0">
-            <div class="flex flex-col gap-4 items-center">
-              <!-- Quick Stats (3x2 grid) -->
-              <div class="w-full">
-                <app-quick-stats-panel></app-quick-stats-panel>
-              </div>
+            <!-- RIGHT COLUMN - Stats (2x3) + Weekly Forecast -->
+            <ion-col
+              size="12"
+              sizeMd="5"
+              sizeLg="5"
+              class="!px-0 md:!px-6 !pt-0"
+            >
+              <div class="flex flex-col gap-2 items-center">
+                <!-- Quick Stats (2x3 grid) -->
+                <div class="w-full">
+                  <app-quick-stats-panel></app-quick-stats-panel>
+                </div>
 
-              <!-- Weekly Forecast (centered) -->
-              <div id="weekly-forecast-desktop">
-                <app-weekly-forecast-list
-                  [days]="forecastDays"
-                ></app-weekly-forecast-list>
+                <!-- Weekly Forecast (centered) -->
+                <div id="weekly-forecast-desktop">
+                  <app-weekly-forecast-list
+                    [days]="forecastDays"
+                  ></app-weekly-forecast-list>
+                </div>
               </div>
-            </div>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </div>
     </ng-container>
   </div>
 </div>

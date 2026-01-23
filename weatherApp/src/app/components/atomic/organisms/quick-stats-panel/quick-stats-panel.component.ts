@@ -5,12 +5,14 @@ import { Observable } from 'rxjs';
 import { WeatherService } from '../../../../core/services/weather.service';
 import { WeatherStats } from '../../../../core/models/weather.models';
 
+import { TranslateModule } from '@ngx-translate/core';
+
 @Component({
   selector: 'app-quick-stats-panel',
   templateUrl: './quick-stats-panel.component.html',
   styleUrls: ['./quick-stats-panel.component.scss'],
   standalone: true,
-  imports: [CommonModule, IonicModule],
+  imports: [CommonModule, IonicModule, TranslateModule],
 })
 export class QuickStatsPanelComponent {
   stats$: Observable<WeatherStats>;

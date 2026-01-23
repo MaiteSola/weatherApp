@@ -17,7 +17,7 @@
         {{ layer.icon }}
       </span>
       <span class="text-xs font-semibold hidden md:inline">{{
-        layer.label
+        layer.label | translate
       }}</span>
     </button>
 
@@ -30,43 +30,59 @@
     </button>
   </div>
 
-  <!-- Map Container -->
-  <div id="weather-map" class="flex-1 w-full min-h-[400px]"></div>
-
-  <!-- Legend -->
+  <!-- Legend (moved up) -->
   <div
-    class="flex items-center justify-center gap-4 p-3 bg-surface-dark/50 backdrop-blur-md"
+    class="flex items-center justify-center gap-4 p-3 bg-surface-dark/40 backdrop-blur-md border-t border-white/5"
   >
     <div class="flex items-center gap-2" *ngIf="selectedLayer === 'temp'">
-      <span class="text-xs text-white/60">Frío</span>
+      <span class="text-xs text-white/80 font-semibold">{{
+        "MAP.LEGEND.COLD" | translate
+      }}</span>
       <div
-        class="w-32 h-2 rounded-full bg-gradient-to-r from-blue-500 via-green-400 via-yellow-400 to-red-500"
+        class="w-32 md:w-48 h-3 rounded-full bg-gradient-to-r from-blue-500 via-green-400 via-yellow-400 to-red-500 shadow-lg"
       ></div>
-      <span class="text-xs text-white/60">Caliente</span>
+      <span class="text-xs text-white/80 font-semibold">{{
+        "MAP.LEGEND.HOT" | translate
+      }}</span>
     </div>
     <div
       class="flex items-center gap-2"
       *ngIf="selectedLayer === 'precipitation'"
     >
-      <span class="text-xs text-white/60">Poco</span>
+      <span class="text-xs text-white/80 font-semibold">{{
+        "MAP.LEGEND.LOW" | translate
+      }}</span>
       <div
-        class="w-32 h-2 rounded-full bg-gradient-to-r from-transparent via-blue-400 to-blue-700"
+        class="w-32 md:w-48 h-3 rounded-full bg-gradient-to-r from-transparent via-blue-400 to-blue-700 shadow-lg"
       ></div>
-      <span class="text-xs text-white/60">Mucho</span>
+      <span class="text-xs text-white/80 font-semibold">{{
+        "MAP.LEGEND.HIGH" | translate
+      }}</span>
     </div>
     <div class="flex items-center gap-2" *ngIf="selectedLayer === 'clouds'">
-      <span class="text-xs text-white/60">Despejado</span>
+      <span class="text-xs text-white/80 font-semibold">{{
+        "MAP.LEGEND.CLEAR" | translate
+      }}</span>
       <div
-        class="w-32 h-2 rounded-full bg-gradient-to-r from-transparent to-gray-400"
+        class="w-32 md:w-48 h-3 rounded-full bg-gradient-to-r from-transparent to-gray-400 shadow-lg"
       ></div>
-      <span class="text-xs text-white/60">Nublado</span>
+      <span class="text-xs text-white/80 font-semibold">{{
+        "MAP.LEGEND.CLOUDY" | translate
+      }}</span>
     </div>
     <div class="flex items-center gap-2" *ngIf="selectedLayer === 'wind'">
-      <span class="text-xs text-white/60">Calma</span>
+      <span class="text-xs text-white/80 font-semibold">{{
+        "MAP.LEGEND.CALM" | translate
+      }}</span>
       <div
-        class="w-32 h-2 rounded-full bg-gradient-to-r from-green-400 via-yellow-400 to-red-500"
+        class="w-32 md:w-48 h-3 rounded-full bg-gradient-to-r from-green-400 via-yellow-400 to-red-500 shadow-lg"
       ></div>
-      <span class="text-xs text-white/60">Fuerte</span>
+      <span class="text-xs text-white/80 font-semibold">{{
+        "MAP.LEGEND.STRONG" | translate
+      }}</span>
     </div>
   </div>
+
+  <!-- Map Container -->
+  <div id="weather-map" class="flex-1 w-full min-h-[400px]"></div>
 </section>

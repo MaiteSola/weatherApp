@@ -12,6 +12,7 @@ import {
   GeoResponse,
 } from '../models/weather.models';
 import { HttpClient } from '@angular/common/http';
+import { LanguageService } from './language.service';
 
 @Injectable({
   providedIn: 'root',
@@ -28,10 +29,16 @@ export class WeatherService {
   private currentLat: number = 40.4168; // Default: Madrid
   private currentLon: number = -3.7038;
 
+  // Temperature Unit State
+  private unitSubject = new BehaviorSubject<'celsius' | 'fahrenheit'>(
+    'celsius',
+  );
+  public unit$ = this.unitSubject.asObservable();
+
   // Themes definition
   private readonly themes: Record<string, WeatherTheme> = {
     sunny: {
-      condition: 'Despejado',
+      condition: 'WEATHER.CONDITION.CLEAR',
       icon: 'light_mode',
       bgGradient:
         'radial-gradient(circle at center, rgba(249, 115, 22, 0.5) 0%, rgba(249, 115, 22, 0.1) 40%, transparent 80%)',
@@ -39,7 +46,7 @@ export class WeatherService {
       glowColor: 'rgba(249, 115, 22, 0.4)',
     },
     cloudy: {
-      condition: 'Nublado',
+      condition: 'WEATHER.CONDITION.CLOUDY',
       icon: 'cloud',
       bgGradient:
         'radial-gradient(circle at center, rgba(156, 163, 175, 0.5) 0%, rgba(156, 163, 175, 0.1) 40%, transparent 80%)',
@@ -47,7 +54,7 @@ export class WeatherService {
       glowColor: 'rgba(156, 163, 175, 0.4)',
     },
     rainy: {
-      condition: 'Lluvia',
+      condition: 'WEATHER.CONDITION.RAIN',
       icon: 'rainy',
       bgGradient:
         'radial-gradient(circle at center, rgba(37, 99, 235, 0.5) 0%, rgba(37, 99, 235, 0.1) 40%, transparent 80%)',
@@ -55,7 +62,7 @@ export class WeatherService {
       glowColor: 'rgba(37, 99, 235, 0.4)',
     },
     stormy: {
-      condition: 'Tormenta',
+      condition: 'WEATHER.CONDITION.THUNDERSTORM',
       icon: 'thunderstorm',
       bgGradient:
         'radial-gradient(circle at center, rgba(147, 51, 234, 0.5) 0%, rgba(147, 51, 234, 0.1) 40%, transparent 80%)',
@@ -67,7 +74,7 @@ export class WeatherService {
   // Observable subjects
   private currentWeatherSubject = new BehaviorSubject<CurrentWeather>({
     temperature: 24,
-    condition: 'Despejado',
+    condition: 'WEATHER.CONDITION.CLEAR',
     icon: 'light_mode',
     maxTemp: 28,
     minTemp: 16,
@@ -98,6 +105,15 @@ export class WeatherService {
   private hourlyForecastSubject = new BehaviorSubject<HourlyForecast[]>([]);
   private dailyForecastSubject = new BehaviorSubject<DailyForecast[]>([]);
 
+  // Coordinates subject to share with map
+  private currentCoordinatesSubject = new BehaviorSubject<{
+    lat: number;
+    lon: number;
+  }>({
+    lat: 40.4168,
+    lon: -3.7038,
+  });
+
   // Observables
   public currentWeather$: Observable<CurrentWeather> =
     this.currentWeatherSubject.asObservable();
@@ -111,12 +127,18 @@ export class WeatherService {
     this.hourlyForecastSubject.asObservable();
   public dailyForecast$: Observable<DailyForecast[]> =
     this.dailyForecastSubject.asObservable();
+  public currentCoordinates$: Observable<{ lat: number; lon: number }> =
+    this.currentCoordinatesSubject.asObservable();
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private languageService: LanguageService,
+  ) {}
 
   // Fetch and update hourly forecast from API with interpolation for every hour
   private fetchHourlyForecast(): void {
-    const url = `${this.forecastUrl}?lat=${this.currentLat}&lon=${this.currentLon}&appid=${this.apiKey}&units=metric&lang=es`;
+    const lang = this.languageService.getCurrentLanguage();
+    const url = `${this.forecastUrl}?lat=${this.currentLat}&lon=${this.currentLon}&appid=${this.apiKey}&units=metric&lang=${lang}`;
 
     this.http.get<ForecastApiResponse>(url).subscribe({
       next: (data) => {
@@ -142,27 +164,27 @@ export class WeatherService {
           return;
         }
 
-        // Generate hourly forecasts from current hour to midnight
+        // Generate hourly forecasts for the next 12 hours from current time
         const startHour = nowInCity.getHours();
         const currentDate = new Date(nowInCity);
         currentDate.setMinutes(0, 0, 0);
 
-        for (let hour = startHour; hour <= 23; hour++) {
+        for (let i = 0; i < 12; i++) {
           const targetTime = new Date(nowInCity);
-          targetTime.setHours(hour, 0, 0, 0);
+          targetTime.setHours(startHour + i, 0, 0, 0);
           const targetTimestamp = targetTime.getTime() / 1000;
 
           // Find the two closest forecast points
           let before: any = null;
           let after: any = null;
 
-          for (let i = 0; i < forecasts.length - 1; i++) {
+          for (let j = 0; j < forecasts.length - 1; j++) {
             if (
-              forecasts[i].dt <= targetTimestamp &&
-              forecasts[i + 1].dt >= targetTimestamp
+              forecasts[j].dt <= targetTimestamp &&
+              forecasts[j + 1].dt >= targetTimestamp
             ) {
-              before = forecasts[i];
-              after = forecasts[i + 1];
+              before = forecasts[j];
+              after = forecasts[j + 1];
               break;
             }
           }
@@ -176,14 +198,15 @@ export class WeatherService {
                 : prev,
             );
 
+            const displayHour = (startHour + i) % 24;
             hourlyData.push({
               time:
-                hour === startHour
+                i === 0
                   ? 'Ahora'
-                  : `${hour.toString().padStart(2, '0')}:00`,
+                  : `${displayHour.toString().padStart(2, '0')}:00`,
               icon: this.mapIcon(closest.weather[0].icon),
               temperature: Math.round(closest.main.temp),
-              isActive: hour === startHour,
+              isActive: i === 0,
             });
             continue;
           }
@@ -202,14 +225,15 @@ export class WeatherService {
             ? after.weather[0].icon
             : before.weather[0].icon;
 
+          const displayHour = (startHour + i) % 24;
           hourlyData.push({
             time:
-              hour === startHour
+              i === 0
                 ? 'Ahora'
-                : `${hour.toString().padStart(2, '0')}:00`,
+                : `${displayHour.toString().padStart(2, '0')}:00`,
             icon: this.mapIcon(weatherIcon),
             temperature: Math.round(interpolatedTemp),
-            isActive: hour === startHour,
+            isActive: i === 0,
           });
         }
 
@@ -236,7 +260,8 @@ export class WeatherService {
 
   // Fetch and update daily forecast from API
   private fetchDailyForecast(days: 3 | 5 = 5): void {
-    const url = `${this.forecastUrl}?lat=${this.currentLat}&lon=${this.currentLon}&appid=${this.apiKey}&units=metric&lang=es`;
+    const lang = this.languageService.getCurrentLanguage();
+    const url = `${this.forecastUrl}?lat=${this.currentLat}&lon=${this.currentLon}&appid=${this.apiKey}&units=metric&lang=${lang}`;
 
     this.http.get<ForecastApiResponse>(url).subscribe({
       next: (data) => {
@@ -255,7 +280,15 @@ export class WeatherService {
 
         const dailyForecasts: DailyForecast[] = [];
         const daysArray = Array.from(dailyMap.entries()).slice(0, days);
-        const dayNames = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+        const dayNames = [
+          'DAYS.SUN',
+          'DAYS.MON',
+          'DAYS.TUE',
+          'DAYS.WED',
+          'DAYS.THU',
+          'DAYS.FRI',
+          'DAYS.SAT',
+        ];
 
         daysArray.forEach(([dateKey, forecasts], index) => {
           const date = new Date(dateKey);
@@ -273,9 +306,12 @@ export class WeatherService {
             (a, b) => b[1] - a[1],
           )[0][0];
 
-          const weatherCondition =
+          const weatherConditionId =
             forecasts.find((f) => f.weather[0].icon === mostCommonIcon)
-              ?.weather[0].description || 'Despejado';
+              ?.weather[0].id || 800;
+
+          const weatherConditionKey =
+            this.getTranslationKeyForWeatherId(weatherConditionId);
 
           // Calculate precipitation probability
           const avgPop = Math.round(
@@ -284,8 +320,8 @@ export class WeatherService {
           );
 
           dailyForecasts.push({
-            day: index === 0 ? 'Hoy' : dayNames[date.getDay()],
-            text: this.truncateText(weatherCondition, 8),
+            day: index === 0 ? 'FORECAST.TODAY' : dayNames[date.getDay()],
+            text: weatherConditionKey,
             icon: this.mapIcon(mostCommonIcon),
             max: maxTemp,
             min: minTemp,
@@ -308,7 +344,7 @@ export class WeatherService {
   private getFallbackDailyForecast(days: 3 | 5): DailyForecast[] {
     const allForecasts: DailyForecast[] = [
       {
-        day: 'Hoy',
+        day: 'FORECAST.TODAY',
         text: 'Soleado',
         icon: 'light_mode',
         max: 28,
@@ -318,7 +354,7 @@ export class WeatherService {
         color: 'from-cyan-400 to-yellow-400',
       },
       {
-        day: 'Mañ',
+        day: 'FORECAST.TOMORROW', // Ensure this key exists or use logic
         text: 'Parcial',
         icon: 'partly_cloudy_day',
         max: 26,
@@ -328,7 +364,7 @@ export class WeatherService {
         color: 'from-cyan-400 to-yellow-400',
       },
       {
-        day: 'Mié',
+        day: 'DAYS.WED',
         text: 'Lluvia',
         icon: 'rainy',
         max: 22,
@@ -338,7 +374,7 @@ export class WeatherService {
         color: 'from-cyan-400 to-yellow-400',
       },
       {
-        day: 'Jue',
+        day: 'DAYS.THU',
         text: 'Nublado',
         icon: 'cloud',
         max: 21,
@@ -348,7 +384,7 @@ export class WeatherService {
         color: 'from-cyan-400 to-yellow-400',
       },
       {
-        day: 'Vie',
+        day: 'DAYS.FRI',
         text: 'Tormenta',
         icon: 'thunderstorm',
         max: 19,
@@ -359,11 +395,6 @@ export class WeatherService {
       },
     ];
     return allForecasts.slice(0, days);
-  }
-
-  private truncateText(text: string, maxLength: number): string {
-    if (text.length <= maxLength) return text;
-    return text.substring(0, maxLength);
   }
 
   // Get all available themes
@@ -381,13 +412,6 @@ export class WeatherService {
     const theme = this.themes[themeName];
     if (theme) {
       this.currentThemeSubject.next(theme);
-      // Also update current weather condition
-      const currentWeather = this.currentWeatherSubject.value;
-      this.currentWeatherSubject.next({
-        ...currentWeather,
-        condition: theme.condition,
-        icon: theme.icon,
-      });
     }
   }
 
@@ -402,10 +426,22 @@ export class WeatherService {
     this.setTheme(themeKeys[nextIndex]);
   }
 
+  // Set temperature unit
+  setUnit(unit: 'celsius' | 'fahrenheit'): void {
+    this.unitSubject.next(unit);
+  }
+
+  getCurrentUnit(): 'celsius' | 'fahrenheit' {
+    return this.unitSubject.value;
+  }
+
   // Search by coordinates (Reverse Geocoding)
   searchByCoordinates(lat: number, lon: number): void {
     this.currentLat = lat;
     this.currentLon = lon;
+
+    // Emit new coordinates for map to update
+    this.currentCoordinatesSubject.next({ lat, lon });
 
     const reverseGeoUrl = `https://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&limit=1&appid=${this.apiKey}`;
 
@@ -417,8 +453,9 @@ export class WeatherService {
         }
 
         const location = geoData[0];
+        const lang = this.languageService.getCurrentLanguage();
         // Use local name if available, otherwise default name
-        const displayName = location.local_names?.['es'] || location.name;
+        const displayName = location.local_names?.[lang] || location.name;
 
         // Reuse the logic to fetch weather data
         this.fetchWeatherData(displayName, location.country);
@@ -429,15 +466,24 @@ export class WeatherService {
     });
   }
 
+  // Method to refresh weather data when language changes
+  refetchWeatherData(): void {
+    const lang = this.languageService.getCurrentLanguage();
+
+    // Refresh weather data and ensure city name is translated
+    this.searchByCoordinates(this.currentLat, this.currentLon);
+  }
+
   // Refactored method to fetch weather data (shared by searchCity and searchByCoordinates)
   private fetchWeatherData(displayName: string, country: string): void {
+    const lang = this.languageService.getCurrentLanguage();
     // Call Weather API with coordinates
-    const weatherUrl = `${this.apiUrl}?lat=${this.currentLat}&lon=${this.currentLon}&appid=${this.apiKey}&units=metric&lang=es`;
+    const weatherUrl = `${this.apiUrl}?lat=${this.currentLat}&lon=${this.currentLon}&appid=${this.apiKey}&units=metric&lang=${lang}`;
 
     this.http.get<WeatherApiResponse>(weatherUrl).subscribe({
       next: (data) => {
         // Fetch forecast data to get accurate min/max for today
-        const forecastUrl = `${this.forecastUrl}?lat=${this.currentLat}&lon=${this.currentLon}&appid=${this.apiKey}&units=metric&lang=es`;
+        const forecastUrl = `${this.forecastUrl}?lat=${this.currentLat}&lon=${this.currentLon}&appid=${this.apiKey}&units=metric&lang=${lang}`;
 
         this.http.get<ForecastApiResponse>(forecastUrl).subscribe({
           next: (forecastData) => {
@@ -467,7 +513,7 @@ export class WeatherService {
             // Map to CurrentWeather with correct min/max
             const current: CurrentWeather = {
               temperature: Math.round(data.main.temp),
-              condition: data.weather[0].description,
+              condition: this.getTranslationKeyForWeatherId(data.weather[0].id),
               icon: this.mapIcon(data.weather[0].icon),
               maxTemp: Math.round(maxTemp),
               minTemp: Math.round(minTemp),
@@ -536,30 +582,47 @@ export class WeatherService {
 
   // Search for a city
   searchCity(city: string): void {
-    // Add to recent searches
-    const searches = this.recentSearchesSubject.value;
-    const newSearches = [
-      { city },
-      ...searches.filter((s) => s.city !== city),
-    ].slice(0, 3);
-    this.recentSearchesSubject.next(newSearches);
+    this.internalSearchCity(city, city);
+  }
 
-    // Call Geo API
-    const geoUrl = `${this.geoUrl}?q=${city}&limit=1&appid=${this.apiKey}`;
+  private internalSearchCity(city: string, originalQuery: string): void {
+    const geoUrl = `${this.geoUrl}?q=${city}&limit=5&appid=${this.apiKey}`;
 
     this.http.get<GeoResponse[]>(geoUrl).subscribe({
       next: (geoData) => {
         if (!geoData || geoData.length === 0) {
-          console.warn('No location found for:', city);
+          // If not found and query is long enough, try "fuzzy" search by removing last char
+          if (city.length > 3) {
+            this.internalSearchCity(city.slice(0, -1), originalQuery);
+          } else {
+            console.warn('No location found for:', originalQuery);
+          }
           return;
         }
 
+        // Found a location
         const location = geoData[0];
         this.currentLat = location.lat;
         this.currentLon = location.lon;
 
+        // Emit new coordinates for map to update
+        this.currentCoordinatesSubject.next({
+          lat: location.lat,
+          lon: location.lon,
+        });
+
+        const lang = this.languageService.getCurrentLanguage();
         // Use local name if available, otherwise default name
-        const displayName = location.local_names?.['es'] || location.name;
+        const displayName = location.local_names?.[lang] || location.name;
+
+        // Add found city to recent searches (use display name or original query if preferred)
+        // Here we use the actual found name for better UX
+        const searches = this.recentSearchesSubject.value;
+        const newSearches = [
+          { city: displayName },
+          ...searches.filter((s) => s.city !== displayName),
+        ].slice(0, 3);
+        this.recentSearchesSubject.next(newSearches);
 
         // Call common weather fetch logic
         this.fetchWeatherData(displayName, location.country);
@@ -592,6 +655,20 @@ export class WeatherService {
       '50n': 'foggy',
     };
     return iconMap[apiIcon] || 'help_outline';
+  }
+
+  private getTranslationKeyForWeatherId(id: number): string {
+    if (id >= 200 && id < 300) return 'WEATHER.CONDITION.THUNDERSTORM';
+    if (id >= 300 && id < 500) return 'WEATHER.CONDITION.DRIZZLE';
+    if (id >= 500 && id < 600) return 'WEATHER.CONDITION.RAIN';
+    if (id >= 600 && id < 700) return 'WEATHER.CONDITION.SNOW';
+    if (id >= 700 && id < 800) return 'WEATHER.CONDITION.ATMOSPHERE';
+    if (id === 800) return 'WEATHER.CONDITION.CLEAR';
+    if (id === 801) return 'WEATHER.CONDITION.FEW_CLOUDS';
+    if (id === 802) return 'WEATHER.CONDITION.SCATTERED_CLOUDS';
+    if (id === 803) return 'WEATHER.CONDITION.BROKEN_CLOUDS';
+    if (id === 804) return 'WEATHER.CONDITION.OVERCAST_CLOUDS';
+    return 'WEATHER.CONDITION.UNKNOWN';
   }
 
   private getThemeNameFromCondition(id: number): string {
